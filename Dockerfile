@@ -23,4 +23,4 @@ RUN cd server && npx tsc
 ENV NODE_ENV=production
 EXPOSE 5000
 
-CMD ["sh", "-c", "cd server && echo 'Running migrations...' && for i in 1 2 3 4 5; do npx prisma migrate deploy && echo 'Migrations done' && break || (echo \"Attempt $i failed, retrying in 5s...\" && sleep 5); done && node dist/index.js"]
+CMD ["node", "server/dist/index.js"]
