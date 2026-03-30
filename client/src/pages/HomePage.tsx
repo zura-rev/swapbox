@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import ItemCard from '@/components/items/ItemCard';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ const TYPES = [
   { value: 'gift', labelKey: 'filterGift' },
 ];
 
-const ALL_CAT = { id: 'all', slug: 'all', nameKa: 'ყველა' };
+const ALL_CAT = { id: 'all', slug: 'all', nameKa: 'ყველა', nameEn: 'All', nameRu: 'Все' };
 const LIMIT = 20;
 
 // ─── Feed Card ────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void 
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />{cond.label}
           </span>
           {item.category?.nameKa && (
-            <span className="text-[11px] bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-gray-500">{item.category.nameKa}</span>
+            <span className="text-[11px] bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-gray-500">{categoryName(item.category)}</span>
           )}
         </div>
 
@@ -257,7 +257,7 @@ export default function HomePage() {
                 {meta.icon}
               </div>
               <span className="text-[9.5px] font-semibold leading-tight text-center w-full px-1 truncate" style={{ color: active ? meta.color : undefined }}>
-                {active ? c.nameKa : <span className="text-gray-500 dark:text-gray-400">{c.nameKa}</span>}
+                {active ? categoryName(c) : <span className="text-gray-500 dark:text-gray-400">{categoryName(c)}</span>}
               </span>
             </button>
           );

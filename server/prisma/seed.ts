@@ -6,15 +6,15 @@ const prisma = new PrismaClient();
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { slug: 'electronics', nameKa: 'ელექტრონიკა', nameEn: 'Electronics', icon: '⚡', sortOrder: 1 },
-  { slug: 'clothing',    nameKa: 'ტანსაცმელი',  nameEn: 'Clothing',     icon: '✦', sortOrder: 2 },
-  { slug: 'books',       nameKa: 'წიგნები',      nameEn: 'Books',        icon: '▤', sortOrder: 3 },
-  { slug: 'furniture',   nameKa: 'ავეჯი',        nameEn: 'Furniture',    icon: '▣', sortOrder: 4 },
-  { slug: 'sports',      nameKa: 'სპორტი',       nameEn: 'Sports',       icon: '●', sortOrder: 5 },
-  { slug: 'gaming',      nameKa: 'გეიმინგი',     nameEn: 'Gaming',       icon: '◎', sortOrder: 6 },
-  { slug: 'kids',        nameKa: 'საბავშვო',     nameEn: 'Kids',         icon: '◉', sortOrder: 7 },
-  { slug: 'other',       nameKa: 'სხვა',         nameEn: 'Other',        icon: '◇', sortOrder: 8 },
-  { slug: 'cars',        nameKa: 'ავტომობილები', nameEn: 'Cars',         icon: '🚗', sortOrder: 9 },
+  { slug: 'electronics', nameKa: 'ელექტრონიკა', nameEn: 'Electronics', nameRu: 'Электроника',  icon: '⚡', sortOrder: 1 },
+  { slug: 'clothing',    nameKa: 'ტანსაცმელი',  nameEn: 'Clothing',    nameRu: 'Одежда',       icon: '✦', sortOrder: 2 },
+  { slug: 'books',       nameKa: 'წიგნები',      nameEn: 'Books',       nameRu: 'Книги',        icon: '▤', sortOrder: 3 },
+  { slug: 'furniture',   nameKa: 'ავეჯი',        nameEn: 'Furniture',   nameRu: 'Мебель',       icon: '▣', sortOrder: 4 },
+  { slug: 'sports',      nameKa: 'სპორტი',       nameEn: 'Sports',      nameRu: 'Спорт',        icon: '●', sortOrder: 5 },
+  { slug: 'gaming',      nameKa: 'გეიმინგი',     nameEn: 'Gaming',      nameRu: 'Игры',         icon: '◎', sortOrder: 6 },
+  { slug: 'kids',        nameKa: 'საბავშვო',     nameEn: 'Kids',        nameRu: 'Детское',      icon: '◉', sortOrder: 7 },
+  { slug: 'other',       nameKa: 'სხვა',         nameEn: 'Other',       nameRu: 'Другое',       icon: '◇', sortOrder: 8 },
+  { slug: 'cars',        nameKa: 'ავტომობილები', nameEn: 'Cars',        nameRu: 'Автомобили',   icon: '🚗', sortOrder: 9 },
 ];
 
 const USERS = [

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { cn, timeAgo, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { cn, timeAgo, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -32,7 +32,8 @@ export default function MyItemsPage() {
       const matchesSearch = !query.trim() ||
         item.title.toLowerCase().includes(query.toLowerCase()) ||
         item.description?.toLowerCase().includes(query.toLowerCase()) ||
-        item.category?.nameKa?.toLowerCase().includes(query.toLowerCase());
+        item.category?.nameKa?.toLowerCase().includes(query.toLowerCase()) ||
+        item.category?.nameEn?.toLowerCase().includes(query.toLowerCase());
       const matchesType = filterType === 'all' || item.type === filterType;
       return matchesSearch && matchesType;
     });
@@ -184,7 +185,7 @@ export default function MyItemsPage() {
                       )}>
                         {TYPE_MAP[item.type]}
                       </span>
-                      <span className="text-[10px] text-gray-400">{item.category?.nameKa}</span>
+                      <span className="text-[10px] text-gray-400">{item.category ? categoryName(item.category) : ''}</span>
                     </div>
                     <Link to={`/items/${item.id}`}>
                       <p className="text-sm font-semibold truncate hover:text-brand-400 transition-colors">{item.title}</p>

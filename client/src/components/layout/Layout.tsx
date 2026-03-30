@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
-import { getInitials, timeAgo, cn } from '@/lib/utils';
+import { getInitials, timeAgo, cn, categoryName } from '@/lib/utils';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -211,7 +211,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{item.title}</p>
-                    <p className="text-xs text-gray-400 truncate">{item.category?.nameKa}{item.city ? ` · ${item.city}` : ''}</p>
+                    <p className="text-xs text-gray-400 truncate">{item.category ? categoryName(item.category) : ''}{item.city ? ` · ${item.city}` : ''}</p>
                   </div>
                   <span className={`shrink-0 text-[10px] px-1.5 py-0.5 rounded-full font-medium ${item.type === 'swap' ? 'bg-brand-400/10 text-brand-400' : 'bg-gift-500/10 text-gift-500'}`}>
                     {item.type === 'swap' ? 'გაცვლა' : 'საჩუქარი'}

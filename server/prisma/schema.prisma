@@ -95,6 +95,7 @@ model Category {
   slug      String   @unique
   nameKa    String   @map("name_ka")
   nameEn    String   @map("name_en")
+  nameRu    String   @default("") @map("name_ru")
   icon      String
   sortOrder Int      @default(0) @map("sort_order")
   itemCount Int      @default(0) @map("item_count")

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
-import { cn, CONDITION_MAP } from '@/lib/utils';
+import { cn, CONDITION_MAP, categoryName } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -144,7 +144,7 @@ export default function NewItemPage() {
                 'py-2 rounded-xl border text-xs font-medium transition-all text-center',
                 categoryId === c.id ? 'border-brand-400 bg-brand-400/10 text-brand-400' : 'border-gray-200 dark:border-gray-700 text-gray-500'
               )}>
-                <span className="block text-base mb-0.5">{c.icon}</span>{c.nameKa}
+                <span className="block text-base mb-0.5">{c.icon}</span>{categoryName(c)}
               </button>
             ))}
           </div>

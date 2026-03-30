@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, cn } from '@/lib/utils';
+import { timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, cn, categoryName } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -375,7 +375,7 @@ if (loading || !item) return (
               <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">
                 <span className="w-2 h-2 rounded-full" style={{ background: cond?.color }} />{cond?.label}
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">{item.category?.icon} {item.category?.nameKa}</span>
+              <span className="text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">{item.category?.icon} {item.category ? categoryName(item.category) : ''}</span>
               <span className="text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">👁 {item.viewCount}</span>
             </div>
 

@@ -150,6 +150,7 @@ export class PrismaItemRepository implements IItemRepository {
         { city: { contains: filters.search, mode: 'insensitive' } },
         { category: { nameKa: { contains: filters.search, mode: 'insensitive' } } },
         { category: { nameEn: { contains: filters.search, mode: 'insensitive' } } },
+        { category: { nameRu: { contains: filters.search, mode: 'insensitive' } } },
         { user: { displayName: { contains: filters.search, mode: 'insensitive' } } },
         { user: { username: { contains: filters.search, mode: 'insensitive' } } },
       ];

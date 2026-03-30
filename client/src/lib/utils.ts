@@ -2,6 +2,14 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { formatDistanceToNow } from 'date-fns';
 import { ka } from 'date-fns/locale';
+import i18n from '@/i18n/config';
+
+export function categoryName(cat: { nameKa: string; nameEn: string; nameRu?: string }) {
+  const lang = i18n.language;
+  if (lang === 'en') return cat.nameEn;
+  if (lang === 'ru') return cat.nameRu || cat.nameEn;
+  return cat.nameKa;
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

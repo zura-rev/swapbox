@@ -27,7 +27,7 @@ export class PrismaChatRepository implements IChatRepository {
             city: true,
             wantsDescription: true,
             images: { select: { url: true, id: true }, orderBy: { sortOrder: 'asc' as const } },
-            category: { select: { nameKa: true, icon: true } },
+            category: { select: { nameKa: true, nameEn: true, nameRu: true, icon: true } },
             user: { select: { id: true, displayName: true, avatarUrl: true, rating: true, totalReviews: true, isVerified: true } },
           },
         },

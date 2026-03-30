@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { getSocket } from '@/hooks/useSocket';
 import { useNotifications } from '@/hooks/useNotifications';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 const REACT_EMOJIS = ['❤️', '😂', '😮', '😢', '😡', '👍', '👎', '🔥', '🎉', '🙏'];
@@ -206,7 +206,7 @@ function ItemPanel({ item }: { item: any }) {
         <h3 className="text-sm font-bold leading-tight text-gray-900 dark:text-white line-clamp-2">{item.title}</h3>
         <div className="flex flex-wrap gap-1">
           {cond && <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cond.color }} />{cond.label}</span>}
-          {item.category && <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{item.category.icon} {item.category.nameKa}</span>}
+          {item.category && <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{item.category.icon} {categoryName(item.category)}</span>}
           {item.city && <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">📍 {item.city}</span>}
         </div>
         {item.description && <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-4">{item.description}</p>}
