@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "DATABASE_URL=postgresql://dummy:dummy@localhost/dummy npx prisma generate && npx tsc",
-    "start": "npx prisma migrate deploy && node dist/index.js",
+    "start": "node dist/index.js",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
