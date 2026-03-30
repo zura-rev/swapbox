@@ -1,15 +1,8 @@
 [phases.install]
-cmds = [
-  "npm install",
-  "cd server && npm install",
-  "cd client && npm install"
-]
+cmds = ["echo 'install handled in build phase'"]
 
 [phases.build]
-cmds = [
-  "cd client && npx vite build",
-  "cd server && npx prisma generate && npx tsc"
-]
+cmds = ["bash build.sh"]
 
 [start]
 cmd = "cd server && npx prisma migrate deploy && node dist/index.js"
