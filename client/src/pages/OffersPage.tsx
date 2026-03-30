@@ -88,7 +88,9 @@ export default function OffersPage() {
             onClick={() => setTab(t)}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === t ? 'bg-white dark:bg-gray-700 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
           >
-            {t === 'received' ? `📥 მიღებული (${received.filter(o => o.status === 'pending').length})` : '📤 გაგზავნილი'}
+            {t === 'received'
+              ? `📥 მიღებული (${received.filter(o => o.status === 'pending').length})`
+              : `📤 გაგზავნილი (${sent.filter(o => o.status === 'pending').length})`}
           </button>
         ))}
       </div>

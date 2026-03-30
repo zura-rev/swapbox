@@ -8,8 +8,11 @@ export const registerSchema = z.object({
   email: z.string().email('არასწორი ელ.ფოსტა'),
   password: z.string().min(6, 'მინიმუმ 6 სიმბოლო'),
   displayName: z.string().min(2, 'მინიმუმ 2 სიმბოლო'),
-  username: z.string().min(3, 'მინიმუმ 3 სიმბოლო').regex(/^[a-zA-Z0-9_]+$/, 'მხოლოდ ლათინური ასოები და ციფრები'),
 });
+
+function generateUsername(email: string): string {
+  return email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '_');
+}
 
 export class RegisterUseCase {
   constructor(private readonly userRepo: IUserRepository) {}
@@ -17,19 +20,24 @@ export class RegisterUseCase {
   async execute(body: unknown) {
     const data = registerSchema.parse(body);
 
-    const existing = await this.userRepo.findByEmailOrUsername(data.email, data.username);
-    if (existing) {
-      throw new AppError(
-        existing.email === data.email ? 'ელ.ფოსტა უკვე რეგისტრირებულია' : 'Username დაკავებულია',
-        400,
-      );
+    const existingByEmail = await this.userRepo.findByEmailOrUsername(data.email, data.email);
+    if (existingByEmail && existingByEmail.email === data.email) {
+      throw new AppError('ელ.ფოსტა უკვე რეგისტრირებულია', 400);
+    }
+
+    // Auto-generate unique username from email prefix
+    let username = generateUsername(data.email);
+    let attempt = 0;
+    while (await this.userRepo.findByEmailOrUsername('', username)) {
+      attempt++;
+      username = `${generateUsername(data.email)}_${attempt}`;
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
     const user = await this.userRepo.create({
       email: data.email,
       password: hashedPassword,
-      username: data.username,
+      username,
       displayName: data.displayName,
     });
 

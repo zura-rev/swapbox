@@ -7,7 +7,6 @@ export default function AuthPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, register } = useAuth();
@@ -21,7 +20,7 @@ export default function AuthPage() {
         await login(email, password);
         toast.success('მოგესალმებით!');
       } else {
-        await register({ email, password, username, displayName });
+        await register({ email, password, displayName });
         toast.success('რეგისტრაცია წარმატებულია!');
       }
       nav('/');
@@ -32,7 +31,7 @@ export default function AuthPage() {
     }
   };
 
-  const inputCls = 'w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all';
+  const inputCls = 'w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#1e1c2a] flex items-center justify-center px-4">
@@ -58,16 +57,10 @@ export default function AuthPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3">
           {tab === 'register' && (
-            <>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5">სახელი</label>
-                <input placeholder="მაგ: ნიკა მეგრელიშვილი" value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} required />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5">Username</label>
-                <input placeholder="მაგ: nika_m" value={username} onChange={e => setUsername(e.target.value)} className={inputCls} required />
-              </div>
-            </>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1.5">სახელი</label>
+              <input placeholder="მაგ: ნიკა მეგრელიშვილი" value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} required />
+            </div>
           )}
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1.5">ელ. ფოსტა</label>

@@ -21,7 +21,7 @@ interface AuthStore {
   token: string | null;
   fetchUser: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: { email: string; password: string; username: string; displayName: string }) => Promise<void>;
+  register: (data: { email: string; password: string; displayName: string }) => Promise<void>;
   logout: () => Promise<void>;
 }
 
