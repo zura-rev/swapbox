@@ -53,9 +53,9 @@ export class UploadController {
         req.body.isPrimary === 'true',
       );
       res.status(201).json(result);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'ფოტოს ატვირთვის შეცდომა' });
+    } catch (err: any) {
+      console.error('[upload] item-image error:', err?.message || err);
+      res.status(500).json({ error: err?.message || 'ფოტოს ატვირთვის შეცდომა' });
     }
   }
 

@@ -258,8 +258,9 @@ export default function ItemDetailPage() {
         uploaded.push({ url: data.url, filename: data.filename || files[i].name, sortOrder: offerImages.length + i });
       }
       setOfferImages(prev => [...prev, ...uploaded]);
-    } catch {
-      toast.error('სურათის ატვირთვა ვერ მოხერხდა');
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || err?.message || 'სერვერის შეცდომა';
+      toast.error(`სურათი: ${msg}`);
     } finally {
       setUploadingImages(false);
     }
