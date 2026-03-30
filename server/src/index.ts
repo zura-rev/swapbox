@@ -115,7 +115,7 @@ server.listen(PORT, async () => {
   }
 
   try {
-    const count = await prisma.category.count();
+    const count = await prisma.item.count();
     if (count === 0) {
       console.log('Seeding...');
       execSync('npx tsx prisma/seed.ts', { cwd: serverDir, stdio: 'inherit' });

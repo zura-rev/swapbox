@@ -237,19 +237,6 @@ const ITEMS_BY_CATEGORY: Record<string, { titles: string[]; descs: string[]; wan
   },
 };
 
-// ─── CATEGORY IMAGE KEYWORDS (loremflickr.com) ───────────────────────────────
-
-const IMAGE_KEYWORDS: Record<string, string> = {
-  electronics: 'electronics,gadget,technology',
-  clothing:    'fashion,clothing,style',
-  books:       'books,reading,library',
-  furniture:   'furniture,interior,home',
-  sports:      'sports,fitness,exercise',
-  gaming:      'gaming,console,videogame',
-  kids:        'children,toys,play',
-  other:       'vintage,objects,collection',
-  cars:        'car,automobile,vehicle',
-};
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
@@ -257,13 +244,12 @@ function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function imageUrl(slug: string, lock: number, w = 800, h = 600) {
-  const keywords = IMAGE_KEYWORDS[slug] || IMAGE_KEYWORDS.other;
-  return `https://loremflickr.com/${w}/${h}/${keywords}?lock=${lock}`;
+function imageUrl(_slug: string, lock: number, w = 800, h = 600) {
+  return `https://picsum.photos/seed/${lock}/${w}/${h}`;
 }
 
 function avatarUrl(lock: number) {
-  return `https://loremflickr.com/200/200/portrait,person?lock=${lock}`;
+  return `https://picsum.photos/seed/avatar${lock}/200/200`;
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
