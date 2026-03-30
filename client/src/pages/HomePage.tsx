@@ -198,7 +198,7 @@ export default function HomePage() {
       setItems(data.items);
       setTotal(data.total);
       setHasMore(data.items.length === LIMIT && data.items.length < data.total);
-    } catch {}
+    } catch { setHasMore(false); }
     finally { setLoading(false); }
   }, [search, cat, type]);
 
@@ -218,7 +218,7 @@ export default function HomePage() {
       setItems(prev => [...prev, ...data.items]);
       setPage(nextPage);
       setHasMore(data.items.length === LIMIT && items.length + data.items.length < data.total);
-    } catch {}
+    } catch { setHasMore(false); }
     finally { setLoadingMore(false); }
   }, [loadingMore, hasMore, page, search, cat, type, items.length]);
 
