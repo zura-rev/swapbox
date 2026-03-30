@@ -180,6 +180,7 @@ function ForwardDialog({ convs, activeId, onForward, onClose }: {
 
 // ─── Item panel (right sidebar) ───────────────────────────────────────────────
 function ItemPanel({ item }: { item: any }) {
+  const { t } = useTranslation();
   const [imgIdx, setImgIdx] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const images: { id: string; url: string }[] = item.images ?? [];
