@@ -525,11 +525,27 @@ export default function Layout() {
                       <p className="text-sm font-semibold">{user.displayName}</p>
                       <p className="text-xs text-gray-500">@{user.username}</p>
                     </div>
-                    <Link to="/profile" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">👤 {t('myProfile')}</Link>
-                    <Link to="/my-items" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📝 {t('myItems')}</Link>
-                    <Link to="/favorites" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">♥ {t('favorites')}</Link>
-                    <Link to="/offers" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📋 {t('offers')}</Link>
-                    <button onClick={() => { logout(); setMenuOpen(false); nav('/'); }} className="w-full text-left px-3 py-2.5 text-sm text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">{t('logout')}</button>
+                    <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <svg className="w-4 h-4 shrink-0 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                      {t('myProfile')}
+                    </Link>
+                    <Link to="/my-items" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <svg className="w-4 h-4 shrink-0 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                      {t('myItems')}
+                    </Link>
+                    <Link to="/favorites" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <svg className="w-4 h-4 shrink-0 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                      {t('favorites')}
+                    </Link>
+                    <Link to="/offers" onClick={() => setMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <svg className="w-4 h-4 shrink-0 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                      {t('offers')}
+                    </Link>
+                    <div className="border-t border-gray-100 dark:border-gray-700 mt-1" />
+                    <button onClick={() => { logout(); setMenuOpen(false); nav('/'); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                      {t('logout')}
+                    </button>
                   </div>
                 </>
               )}
