@@ -27,37 +27,6 @@ import { globalLimiter, authLimiter } from './presentation/middleware/rateLimite
 
 dotenv.config();
 
-// Run DB migrations on startup
-try {
-  console.log('Running database migrations...');
-  execSync('npx prisma migrate deploy', {
-    cwd: path.join(__dirname, '..'),
-    stdio: 'inherit',
-    env: { ...process.env },
-  });
-  console.log('Migrations complete.');
-} catch (e) {
-  console.error('Migration failed (continuing):', e);
-}
-
-// Seed database if empty
-(async () => {
-  try {
-    const count = await prisma.category.count();
-    if (count === 0) {
-      console.log('Seeding database...');
-      execSync('npx tsx prisma/seed.ts', {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-        env: { ...process.env },
-      });
-      console.log('Seeding complete.');
-    }
-  } catch (e) {
-    console.error('Seed failed (continuing):', e);
-  }
-})();
-
 const app = express();
 const server = createServer(app);
 
@@ -124,10 +93,39 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
   console.log(`SwapBox server running on http://localhost:${PORT}`);
   console.log(`Swagger UI: http://localhost:${PORT}/api/docs`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+
+  // Run migrations after server starts (non-blocking for Railway port detection)
+  try {
+    console.log('Running migrations...');
+    execSync('npx prisma migrate deploy', {
+      cwd: path.join(__dirname, '..'),
+      stdio: 'inherit',
+      env: { ...process.env },
+    });
+    console.log('Migrations done.');
+  } catch (e: any) {
+    console.error('Migration error:', e.message);
+  }
+
+  // Seed if DB is empty
+  try {
+    const count = await prisma.category.count();
+    if (count === 0) {
+      console.log('Seeding...');
+      execSync('npx tsx prisma/seed.ts', {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+        env: { ...process.env },
+      });
+      console.log('Seeding done.');
+    }
+  } catch (e: any) {
+    console.error('Seed error:', e.message);
+  }
 });
 
 export { io };
