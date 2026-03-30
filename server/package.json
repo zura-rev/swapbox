@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "cd ../client && npm install && npm run build && cd ../server && npx prisma generate && tsc",
+    "build": "npx prisma generate && tsc",
     "start": "npx prisma migrate deploy && node dist/index.js",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
