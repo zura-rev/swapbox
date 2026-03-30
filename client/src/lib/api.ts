@@ -14,15 +14,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 — redirect to login
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem('token');
-      if (window.location.pathname !== '/auth') {
-        window.location.href = '/auth';
-      }
     }
     return Promise.reject(err);
   }
