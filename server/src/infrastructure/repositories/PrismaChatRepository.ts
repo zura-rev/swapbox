@@ -31,6 +31,14 @@ export class PrismaChatRepository implements IChatRepository {
             user: { select: { id: true, displayName: true, avatarUrl: true, rating: true, totalReviews: true, isVerified: true } },
           },
         },
+        offer: {
+          select: {
+            id: true,
+            message: true,
+            images: { select: { url: true, sortOrder: true }, orderBy: { sortOrder: 'asc' as const } },
+            user: { select: { id: true, displayName: true, avatarUrl: true } },
+          },
+        },
         _count: {
           select: {
             messages: { where: { isRead: false, senderId: { not: userId } } },

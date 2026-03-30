@@ -267,6 +267,60 @@ function TypingDots() {
   );
 }
 
+// ─── Offer Banner ─────────────────────────────────────────────────────────────
+function OfferBanner({ offer, onLightbox }: { offer: any; onLightbox: (url: string) => void }) {
+  const [expanded, setExpanded] = useState(true);
+  if (!offer || (!offer.message && !offer.images?.length)) return null;
+
+  return (
+    <div className="border-b border-brand-400/20 bg-gradient-to-r from-brand-400/8 to-brand-200/5 dark:from-brand-400/12 dark:to-transparent shrink-0">
+      <button
+        onClick={() => setExpanded(e => !e)}
+        className="w-full px-4 py-2 flex items-center gap-2 text-left hover:bg-brand-400/5 transition-colors"
+      >
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className="text-brand-400 text-xs">📋</span>
+          <span className="text-[11px] font-bold text-brand-500 dark:text-brand-400 uppercase tracking-wider">შეთავაზება</span>
+          {offer.user && <span className="text-[10px] text-gray-400 truncate">· {offer.user.displayName}</span>}
+          {offer.images?.length > 0 && (
+            <span className="text-[9px] bg-brand-400/15 text-brand-500 dark:text-brand-300 px-1.5 py-0.5 rounded-full font-semibold shrink-0">
+              {offer.images.length} ფოტო
+            </span>
+          )}
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          className={cn('text-gray-400 transition-transform shrink-0', expanded ? 'rotate-180' : '')}>
+          <polyline points="18 15 12 9 6 15"/>
+        </svg>
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-3 space-y-2.5">
+          {offer.images?.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {offer.images.map((img: any, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => onLightbox(img.url)}
+                  className="shrink-0 w-[72px] h-[72px] rounded-xl overflow-hidden border-2 border-white dark:border-gray-700 shadow-md hover:scale-105 transition-transform cursor-zoom-in"
+                >
+                  <img src={img.url} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+          {offer.message && (
+            <div className="flex gap-2 items-start bg-white dark:bg-gray-800/70 rounded-xl px-3 py-2.5 border border-brand-400/15 shadow-sm">
+              <span className="text-brand-400 text-sm shrink-0 mt-0.5">💬</span>
+              <p className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">{offer.message}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function ChatPage() {
   const { user, loading: authLoading } = useAuth();
@@ -683,6 +737,17 @@ export default function ChatPage() {
                           <span className="text-[10px] text-brand-400 font-medium truncate">{conv.item.title}</span>
                         </div>
                       )}
+                      {conv.offer?.images?.length > 0 && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <span className="text-[9px] text-gray-400 shrink-0">📋</span>
+                          <div className="flex gap-0.5">
+                            {conv.offer.images.slice(0, 3).map((img: any, i: number) => (
+                              <img key={i} src={img.url} className="w-4 h-4 rounded object-cover shrink-0 border border-white dark:border-gray-700" />
+                            ))}
+                          </div>
+                          {conv.offer.message && <span className="text-[9px] text-gray-400 truncate">{conv.offer.message}</span>}
+                        </div>
+                      )}
                     </div>
                   </button>
                 );
@@ -723,6 +788,11 @@ export default function ChatPage() {
                   </button>
                 )}
               </div>
+
+              {/* Offer banner */}
+              {active.offer && (
+                <OfferBanner offer={active.offer} onLightbox={url => setLightboxImg(url)} />
+              )}
 
               {/* Message search bar */}
               {showMsgSearch && (
