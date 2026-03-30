@@ -254,9 +254,7 @@ export default function ItemDetailPage() {
       for (let i = 0; i < files.length; i++) {
         const fd = new FormData();
         fd.append('image', files[i]);
-        const { data } = await api.post('/upload/item-image', fd, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const { data } = await api.post('/upload/item-image', fd);
         uploaded.push({ url: data.url, filename: data.filename || files[i].name, sortOrder: offerImages.length + i });
       }
       setOfferImages(prev => [...prev, ...uploaded]);

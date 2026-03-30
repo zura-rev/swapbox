@@ -595,7 +595,7 @@ export default function ChatPage() {
     try {
       const form = new FormData();
       form.append('image', file);
-      const { data } = await api.post('/upload/item-image', form, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const { data } = await api.post('/upload/item-image', form);
       const content = `${IMG_PREFIX}${data.url}`;
       const socket = getSocket();
       if (socket) socket.emit('chat:message', { conversationId: active.id, content });
