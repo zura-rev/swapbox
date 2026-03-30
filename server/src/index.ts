@@ -122,6 +122,31 @@ server.listen(PORT, async () => {
     console.error('Migration error:', e.message);
   }
 
+  // Always upsert categories (ensures nameRu and other fields are up-to-date)
+  try {
+    const categories = [
+      { slug: 'electronics', nameKa: 'ელექტრონიკა', nameEn: 'Electronics', nameRu: 'Электроника', icon: '⚡', sortOrder: 1 },
+      { slug: 'clothing',    nameKa: 'ტანსაცმელი',  nameEn: 'Clothing',    nameRu: 'Одежда',      icon: '✦', sortOrder: 2 },
+      { slug: 'books',       nameKa: 'წიგნები',      nameEn: 'Books',       nameRu: 'Книги',       icon: '▤', sortOrder: 3 },
+      { slug: 'furniture',   nameKa: 'ავეჯი',        nameEn: 'Furniture',   nameRu: 'Мебель',      icon: '▣', sortOrder: 4 },
+      { slug: 'sports',      nameKa: 'სპორტი',       nameEn: 'Sports',      nameRu: 'Спорт',       icon: '●', sortOrder: 5 },
+      { slug: 'gaming',      nameKa: 'გეიმინგი',     nameEn: 'Gaming',      nameRu: 'Игры',        icon: '◎', sortOrder: 6 },
+      { slug: 'kids',        nameKa: 'საბავშვო',     nameEn: 'Kids',        nameRu: 'Детское',     icon: '◉', sortOrder: 7 },
+      { slug: 'other',       nameKa: 'სხვა',         nameEn: 'Other',       nameRu: 'Другое',      icon: '◇', sortOrder: 8 },
+      { slug: 'cars',        nameKa: 'ავტომობილები', nameEn: 'Cars',        nameRu: 'Автомобили',  icon: '🚗', sortOrder: 9 },
+    ];
+    for (const cat of categories) {
+      await prisma.category.upsert({
+        where: { slug: cat.slug },
+        update: { nameKa: cat.nameKa, nameEn: cat.nameEn, nameRu: cat.nameRu, icon: cat.icon, sortOrder: cat.sortOrder },
+        create: cat,
+      });
+    }
+    console.log('Categories synced.');
+  } catch (e: any) {
+    console.error('Category sync error:', e.message);
+  }
+
   try {
     const count = await prisma.item.count();
     const hasOldImages = count > 0 && await prisma.itemImage.findFirst({

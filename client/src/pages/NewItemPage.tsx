@@ -44,8 +44,8 @@ export default function NewItemPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) { toast.error('სახელი სავალდებულოა'); return; }
-    if (files.length === 0) { toast.error('მინიმუმ 1 ფოტო'); return; }
+    if (!title.trim()) { toast.error(t('titleRequired')); return; }
+    if (files.length === 0) { toast.error(t('minOnePhoto')); return; }
 
     setLoading(true);
     try {
@@ -67,10 +67,10 @@ export default function NewItemPage() {
         images,
       });
 
-      toast.success('განცხადება დამატებულია!');
+      toast.success(t('itemAdded'));
       nav(`/items/${item.id}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'შეცდომა');
+      toast.error(err.response?.data?.error || t('error'));
     } finally {
       setLoading(false);
     }
@@ -84,20 +84,20 @@ export default function NewItemPage() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Photos */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">ფოტოები ({files.length}/5)</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('photosLabel')} ({files.length}/5)</label>
           <input ref={fileRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} className="hidden" />
           <div className="grid grid-cols-3 gap-2">
             {previews.map((src, i) => (
               <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
                 <img src={src} className="w-full h-full object-cover" />
                 <button type="button" onClick={() => removeFile(i)} className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/50 text-white text-xs flex items-center justify-center">✕</button>
-                {i === 0 && <span className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded bg-brand-400 text-white text-[9px] font-bold">მთავარი</span>}
+                {i === 0 && <span className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded bg-brand-400 text-white text-[9px] font-bold">{t('primaryBadge')}</span>}
               </div>
             ))}
             {files.length < 5 && (
               <button type="button" onClick={() => fileRef.current?.click()} className="aspect-square rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center gap-1 hover:border-brand-400 transition-colors">
                 <span className="text-2xl opacity-30">📷</span>
-                <span className="text-[10px] text-gray-400">ატვირთვა</span>
+                <span className="text-[10px] text-gray-400">{t('uploadPhoto')}</span>
               </button>
             )}
           </div>
@@ -105,33 +105,33 @@ export default function NewItemPage() {
 
         <div>
           <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('titleField')}</label>
-          <input placeholder="მაგ: MacBook Air M1" value={title} onChange={e => setTitle(e.target.value)} className={inputCls} required />
+          <input placeholder={t('titlePlaceholder')} value={title} onChange={e => setTitle(e.target.value)} className={inputCls} required />
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('descriptionField')}</label>
-          <textarea placeholder="დეტალური აღწერა..." value={description} onChange={e => setDescription(e.target.value)} rows={4} className={cn(inputCls, 'resize-y')} required />
+          <textarea placeholder={t('descriptionPlaceholder')} value={description} onChange={e => setDescription(e.target.value)} rows={4} className={cn(inputCls, 'resize-y')} required />
         </div>
 
         {/* Type */}
         <div>
           <label className="block text-xs font-semibold text-gray-500 mb-2">{t('typeField')}</label>
           <div className="grid grid-cols-2 gap-2">
-            {([{ v: 'swap', l: '⇄ გაცვლა', c: 'brand' }, { v: 'gift', l: '◈ საჩუქარი', c: 'gift' }] as const).map(t => (
-              <button key={t.v} type="button" onClick={() => setType(t.v)} className={cn(
+            {([{ v: 'swap', c: 'brand' }, { v: 'gift', c: 'gift' }] as const).map(tab => (
+              <button key={tab.v} type="button" onClick={() => setType(tab.v)} className={cn(
                 'py-3 rounded-xl border-2 text-sm font-semibold transition-all',
-                type === t.v
-                  ? t.c === 'brand' ? 'border-brand-400 bg-brand-400/10 text-brand-400' : 'border-gift-500 bg-gift-500/10 text-gift-500'
+                type === tab.v
+                  ? tab.c === 'brand' ? 'border-brand-400 bg-brand-400/10 text-brand-400' : 'border-gift-500 bg-gift-500/10 text-gift-500'
                   : 'border-gray-200 dark:border-gray-700 text-gray-500'
-              )}>{t.l}</button>
+              )}>{tab.v === 'swap' ? t('swapTypeLabel') : t('giftTypeLabel')}</button>
             ))}
           </div>
         </div>
 
         {type === 'swap' && (
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5">რა გინდა სანაცვლოდ?</label>
-            <input placeholder="მაგ: iPad, ტაბლეტი..." value={wants} onChange={e => setWants(e.target.value)} className={inputCls} />
+            <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('wantsExchangeLabel')}</label>
+            <input placeholder={t('wantsExchangePlaceholder')} value={wants} onChange={e => setWants(e.target.value)} className={inputCls} />
           </div>
         )}
 

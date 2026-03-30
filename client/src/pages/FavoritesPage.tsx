@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
+  const { t } = useTranslation();
   const [removing, setRemoving] = useState(false);
   const primaryImg = item.images?.find((i: any) => i.isPrimary) || item.images?.[0];
   const cond = CONDITION_MAP[item.condition] || CONDITION_MAP.good;
@@ -19,7 +20,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
     try {
       await api.post(`/items/${item.id}/save`);
       onRemove();
-      toast.success('ფავორიტებიდან წაიშალა');
+      toast.success(t('removedFromFavoritesToast'));
     } catch {
       setRemoving(false);
     }
@@ -45,7 +46,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
             onClick={handleRemove}
             disabled={removing}
             className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-sm transition-all shadow"
-            title="ფავორიტებიდან წაშლა"
+            title={t('removeFromFavorites')}
           >
             {removing ? <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> : '♥'}
           </button>
@@ -73,7 +74,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
             <span className="text-[10px] text-gray-400">{item.city}</span>
           </div>
           {item.savedAt && (
-            <p className="text-[10px] text-gray-400 mt-2">შენახულია {timeAgo(item.savedAt)}</p>
+            <p className="text-[10px] text-gray-400 mt-2">{t('savedAt')} {timeAgo(item.savedAt)}</p>
           )}
         </div>
       </div>
@@ -92,7 +93,7 @@ export default function FavoritesPage() {
     if (!user) return;
     api.get('/items/saved')
       .then(({ data }) => setItems(data))
-      .catch(() => toast.error('ჩატვირთვის შეცდომა'))
+      .catch(() => toast.error(t('loadError')))
       .finally(() => setLoading(false));
   }, [user]);
 
@@ -114,7 +115,7 @@ export default function FavoritesPage() {
             {t('favoritesTitle')}
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            {loading ? t('loading') : `${items.length} შენახული განცხადება`}
+            {loading ? t('loading') : t('savedListingsCount', { n: items.length })}
           </p>
         </div>
       </div>
@@ -128,7 +129,7 @@ export default function FavoritesPage() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="ძებნა ფავორიტებში..."
+            placeholder={t('searchFavorites')}
             className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
           />
         </div>
@@ -146,9 +147,9 @@ export default function FavoritesPage() {
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <div className="w-20 h-20 rounded-2xl bg-red-500/10 flex items-center justify-center text-4xl mb-4">♡</div>
           <h2 className="text-lg font-semibold mb-2">{t('noFavorites')}</h2>
-          <p className="text-sm text-gray-400 mb-6 max-w-xs">დააჭირე ♡ განცხადებაზე, რომ ფავორიტებში დაამატო</p>
+          <p className="text-sm text-gray-400 mb-6 max-w-xs">{t('tapToFavorite')}</p>
           <Link to="/" className="px-5 py-2.5 rounded-xl bg-brand-400 text-white text-sm font-semibold hover:bg-brand-500 transition-colors">
-            განცხადებების დათვალიერება
+            {t('browsListings')}
           </Link>
         </div>
       )}
@@ -156,7 +157,7 @@ export default function FavoritesPage() {
       {/* No search results */}
       {!loading && items.length > 0 && filtered.length === 0 && (
         <div className="py-12 text-center text-gray-400">
-          <p className="text-sm">ვერ მოიძებნა "{search}"</p>
+          <p className="text-sm">{t('notFoundQuery', { query: search })}</p>
         </div>
       )}
 

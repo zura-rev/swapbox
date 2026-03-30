@@ -158,14 +158,14 @@ export default function ItemDetailPage() {
   const [reviews, setReviews] = useState<any[]>([]);
 
   const handleDelete = async () => {
-    if (!window.confirm('განცხადების წაშლა გსურთ?')) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     setDeleting(true);
     try {
       await api.delete(`/items/${id}`);
-      toast.success('განცხადება წაიშალა');
+      toast.success(t('itemDeleteSuccess'));
       nav('/');
     } catch {
-      toast.error('წაშლის შეცდომა');
+      toast.error(t('deleteError'));
       setDeleting(false);
     }
   };
@@ -187,9 +187,9 @@ export default function ItemDetailPage() {
     try {
       const { data } = await api.post(`/items/${id}/save`);
       setSaved(data.saved);
-      toast.success(data.saved ? 'ფავორიტებში დაემატა' : 'ფავორიტებიდან წაიშალა');
+      toast.success(data.saved ? t('savedToFavorites') : t('removedFromFavorites'));
     } catch {
-      toast.error('შეცდომა');
+      toast.error(t('error'));
     } finally {
       setSavingItem(false);
     }
@@ -209,10 +209,10 @@ export default function ItemDetailPage() {
       setHasReviewed(true);
       setReviewRating(0);
       setReviewComment('');
-      toast.success('შეფასება დაემატა!');
+      toast.success(t('reviewAdded'));
     } catch (err: any) {
-      if (err?.response?.status === 400) toast.error(err.response.data?.error || 'შეცდომა');
-      else toast.error('შეფასების შეცდომა');
+      if (err?.response?.status === 400) toast.error(err.response.data?.error || t('error'));
+      else toast.error(t('reviewError'));
     } finally {
       setReviewLoading(false);
     }
@@ -226,7 +226,7 @@ export default function ItemDetailPage() {
       setCaptchaSelected([]);
       setOfferStep('captcha');
     } catch {
-      toast.error('გთხოვთ სცადოთ თავიდან');
+      toast.error(t('tryAgain'));
     } finally {
       setCaptchaLoading(false);
     }
@@ -247,7 +247,7 @@ export default function ItemDetailPage() {
   const handleOfferImageUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     if (offerImages.length + files.length > 4) {
-      toast.error('მაქსიმუმ 4 სურათი');
+      toast.error(t('maxImages'));
       return;
     }
     setUploadingImages(true);
@@ -285,16 +285,16 @@ export default function ItemDetailPage() {
         images: offerImages.length > 0 ? offerImages : undefined,
       });
       setOfferSent(true);
-      toast.success(item.type === 'gift' ? 'მოთხოვნა გაიგზავნა!' : 'შეთავაზება გაიგზავნა!');
+      toast.success(item.type === 'gift' ? t('requestSent') : t('offerSent'));
     } catch (err: any) {
       if (err?.response?.status === 409) {
         setOfferSent(true);
-        toast('უკვე გაგზავნილი გაქვს შეთავაზება');
+        toast(t('alreadySentOffer'));
       } else if (err?.response?.status === 400 && err?.response?.data?.error?.includes('captcha')) {
-        toast.error('Captcha არასწორია. სცადეთ თავიდან.');
+        toast.error(t('tryAgain'));
         loadCaptcha();
       } else {
-        toast.error('გაგზავნა ვერ მოხერხდა');
+        toast.error(t('sendError'));
       }
     } finally {
       setOfferLoading(false);
@@ -503,7 +503,7 @@ if (loading || !item) return (
                 {t('cancel')}
               </button>
               <button
-                onClick={() => { if (offerDescription.trim()) loadCaptcha(); else toast.error('გთხოვთ შეიყვანოთ შეთავაზების აღწერა'); }}
+                onClick={() => { if (offerDescription.trim()) loadCaptcha(); else toast.error(t('pleaseEnterOfferDesc')); }}
                 disabled={!offerDescription.trim() || uploadingImages}
                 className="flex-1 py-2.5 rounded-xl bg-brand-400 hover:bg-brand-500 text-white text-sm font-semibold transition-colors disabled:opacity-50"
               >

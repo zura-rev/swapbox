@@ -151,10 +151,63 @@ export default {
   saving: 'Сохраняю...',
   publishing: 'Публикую...',
   publishBtn: 'Опубликовать',
+  photosLabel: 'Фото',
+  uploadPhoto: 'Загрузить',
+  primaryBadge: 'Главное',
+  swapTypeLabel: '⇄ Обмен',
+  giftTypeLabel: '◈ Подарок',
+  wantsExchangeLabel: 'Что хотите в обмен?',
+  wantsExchangePlaceholder: 'напр. iPad, планшет...',
+  titlePlaceholder: 'напр. MacBook Air M1',
+  descriptionPlaceholder: 'Подробное описание...',
+  titleRequired: 'Название обязательно',
+  minOnePhoto: 'Минимум 1 фото',
+  itemAdded: 'Объявление добавлено!',
+  itemUpdated: 'Объявление обновлено!',
+  itemDeleted: 'Удалено',
+  deleteError: 'Ошибка при удалении',
+  deleteConfirmTitle: '"{{title}}" — Удалить?',
+  searchListings: 'Поиск объявлений...',
+  clearSearch: 'Сбросить',
+  manageListings: 'Управление, редактирование и удаление объявлений',
+  totalStat: 'Всего',
+  noSearchResultsFor: 'Объявлений по запросу "{{query}}" не найдено',
+
+  // Auth toasts
+  welcomeToast: 'Добро пожаловать!',
+  registerSuccess: 'Регистрация успешна!',
 
   // Favorites
   favoritesTitle: 'Избранное',
   noFavorites: 'Нет избранных объявлений',
+  tapToFavorite: 'Нажмите ♡ на объявление, чтобы добавить в избранное',
+  browsListings: 'Смотреть объявления',
+  searchFavorites: 'Поиск в избранном...',
+  savedAt: 'Сохранено',
+  savedListingsCount: '{{n}} сохранённых объявлений',
+  removedFromFavoritesToast: 'Удалено из избранного',
+  loadError: 'Ошибка загрузки',
+  notFoundQuery: 'Не найдено "{{query}}"',
+
+  // Profile stats
+  listingsStat: 'Объявлений',
+  totalSwapsStat: 'Обменов',
+  totalGiftsStat: 'Подарков',
+
+  // Offers page toasts
+  offerAcceptedToast: 'Предложение принято! Чат открыт.',
+  offerRejectedToast: 'Предложение отклонено',
+
+  // Item detail toasts
+  itemDeleteSuccess: 'Объявление удалено',
+  savedToFavorites: 'Добавлено в избранное',
+  removedFromFavorites: 'Удалено из избранного',
+  reviewAdded: 'Отзыв добавлен!',
+  reviewError: 'Ошибка отзыва',
+  alreadySentOffer: 'Вы уже отправили предложение',
+  sendError: 'Ошибка отправки',
+  pleaseEnterOfferDesc: 'Пожалуйста, введите описание предложения',
+  tryAgain: 'Пожалуйста, попробуйте ещё раз',
 
   // Common
   loading: 'Загрузка...',

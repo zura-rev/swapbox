@@ -43,14 +43,14 @@ export default function MyItemsPage() {
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const handleDelete = async (id: string, title: string) => {
-    if (!window.confirm(`"${title}" — წაიშალოს?`)) return;
+    if (!window.confirm(t('deleteConfirmTitle', { title }))) return;
     setDeletingId(id);
     try {
       await api.delete(`/items/${id}`);
-      toast.success('წაიშალა');
+      toast.success(t('itemDeleted'));
       setItems(p => p.filter(i => i.id !== id));
     } catch {
-      toast.error('წაშლის შეცდომა');
+      toast.error(t('deleteError'));
     } finally {
       setDeletingId(null);
     }
@@ -67,17 +67,17 @@ export default function MyItemsPage() {
       {/* Header */}
       <div className="mb-7">
         <h1 className="text-2xl font-bold mb-1">{t('myItemsTitle')}</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">განცხადებების მართვა, რედაქტირება და წაშლა</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{t('manageListings')}</p>
       </div>
 
       {/* Stats row */}
       {!loading && items.length > 0 && (
         <div className="grid grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'სულ', value: items.length, color: 'text-gray-700 dark:text-gray-200', bg: 'bg-gray-100 dark:bg-gray-800' },
-            { label: 'გაცვლა', value: swapCount, color: 'text-brand-400', bg: 'bg-brand-400/10' },
-            { label: 'საჩუქარი', value: giftCount, color: 'text-gift-500', bg: 'bg-gift-500/10' },
-            { label: 'ნახვა', value: totalViews, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+            { label: t('totalStat'), value: items.length, color: 'text-gray-700 dark:text-gray-200', bg: 'bg-gray-100 dark:bg-gray-800' },
+            { label: t('filterSwap'), value: swapCount, color: 'text-brand-400', bg: 'bg-brand-400/10' },
+            { label: t('filterGift'), value: giftCount, color: 'text-gift-500', bg: 'bg-gift-500/10' },
+            { label: t('views'), value: totalViews, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
           ].map(s => (
             <div key={s.label} className={cn('rounded-2xl px-4 py-3 text-center', s.bg)}>
               <p className={cn('text-xl font-bold', s.color)}>{s.value}</p>
@@ -97,7 +97,7 @@ export default function MyItemsPage() {
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="განცხადების ძებნა..."
+            placeholder={t('searchListings')}
             className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
           />
           {query && (
@@ -107,20 +107,20 @@ export default function MyItemsPage() {
 
         {/* Type filter */}
         <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800">
-          {(['all', 'swap', 'gift'] as const).map(t => (
+          {(['all', 'swap', 'gift'] as const).map(f => (
             <button
-              key={t}
-              onClick={() => setFilterType(t)}
+              key={f}
+              onClick={() => setFilterType(f)}
               className={cn(
                 'px-3 py-2 text-xs font-medium transition-all',
-                filterType === t
-                  ? t === 'swap' ? 'bg-brand-400 text-white'
-                    : t === 'gift' ? 'bg-gift-500 text-white'
+                filterType === f
+                  ? f === 'swap' ? 'bg-brand-400 text-white'
+                    : f === 'gift' ? 'bg-gift-500 text-white'
                     : 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800'
                   : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'
               )}
             >
-              {t === 'all' ? 'ყველა' : t === 'swap' ? '⇄' : '◈'}
+              {f === 'all' ? t('filterAll') : f === 'swap' ? '⇄' : '◈'}
             </button>
           ))}
         </div>
@@ -148,8 +148,8 @@ export default function MyItemsPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
           <div className="text-4xl mb-3 opacity-30">🔍</div>
-          <p className="text-sm">"{query}"-ს შესაბამისი განცხადება ვერ მოიძებნა</p>
-          <button onClick={() => setQuery('')} className="mt-3 text-xs text-brand-400 hover:underline">გასუფთავება</button>
+          <p className="text-sm">{t('noSearchResultsFor', { query })}</p>
+          <button onClick={() => setQuery('')} className="mt-3 text-xs text-brand-400 hover:underline">{t('clearSearch')}</button>
         </div>
 
       /* List */

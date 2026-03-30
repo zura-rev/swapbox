@@ -40,9 +40,9 @@ export default function ProfilePage() {
             {profile.bio && <p className="text-sm text-gray-500 mt-2">{profile.bio}</p>}
             <div className="flex gap-6 mt-4">
               {[
-                { n: profile.items?.length || 0, l: 'განცხადება' },
-                { n: profile.totalSwaps, l: 'გაცვლა' },
-                { n: profile.totalGifts, l: 'საჩუქარი' },
+                { n: profile.items?.length || 0, l: t('listingsStat') },
+                { n: profile.totalSwaps, l: t('totalSwapsStat') },
+                { n: profile.totalGifts, l: t('totalGiftsStat') },
               ].map((s, i) => (
                 <div key={i} className="text-center">
                   <div className="text-lg font-bold">{s.n}</div>

@@ -151,10 +151,63 @@ export default {
   saving: 'Saving...',
   publishing: 'Publishing...',
   publishBtn: 'Publish',
+  photosLabel: 'Photos',
+  uploadPhoto: 'Upload',
+  primaryBadge: 'Main',
+  swapTypeLabel: '⇄ Swap',
+  giftTypeLabel: '◈ Gift',
+  wantsExchangeLabel: 'What do you want in exchange?',
+  wantsExchangePlaceholder: 'e.g. iPad, tablet...',
+  titlePlaceholder: 'e.g. MacBook Air M1',
+  descriptionPlaceholder: 'Detailed description...',
+  titleRequired: 'Title is required',
+  minOnePhoto: 'At least 1 photo required',
+  itemAdded: 'Listing added!',
+  itemUpdated: 'Listing updated!',
+  itemDeleted: 'Deleted',
+  deleteError: 'Delete error',
+  deleteConfirmTitle: '"{{title}}" — Delete?',
+  searchListings: 'Search listings...',
+  clearSearch: 'Clear',
+  manageListings: 'Manage, edit and delete your listings',
+  totalStat: 'Total',
+  noSearchResultsFor: 'No listings found for "{{query}}"',
+
+  // Auth toasts
+  welcomeToast: 'Welcome!',
+  registerSuccess: 'Registration successful!',
 
   // Favorites
   favoritesTitle: 'Favorites',
   noFavorites: 'No favorite listings',
+  tapToFavorite: 'Press ♡ on a listing to add to favorites',
+  browsListings: 'Browse listings',
+  searchFavorites: 'Search favorites...',
+  savedAt: 'Saved',
+  savedListingsCount: '{{n}} saved listings',
+  removedFromFavoritesToast: 'Removed from favorites',
+  loadError: 'Load error',
+  notFoundQuery: 'Not found "{{query}}"',
+
+  // Profile stats
+  listingsStat: 'Listings',
+  totalSwapsStat: 'Swaps',
+  totalGiftsStat: 'Gifts',
+
+  // Offers page toasts
+  offerAcceptedToast: 'Offer accepted! Chat opened.',
+  offerRejectedToast: 'Offer rejected',
+
+  // Item detail toasts
+  itemDeleteSuccess: 'Listing deleted',
+  savedToFavorites: 'Added to favorites',
+  removedFromFavorites: 'Removed from favorites',
+  reviewAdded: 'Review added!',
+  reviewError: 'Review error',
+  alreadySentOffer: 'You already sent an offer',
+  sendError: 'Failed to send',
+  pleaseEnterOfferDesc: 'Please enter offer description',
+  tryAgain: 'Please try again',
 
   // Common
   loading: 'Loading...',

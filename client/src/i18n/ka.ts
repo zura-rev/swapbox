@@ -151,10 +151,63 @@ export default {
   saving: 'ინახება...',
   publishing: 'ქვეყნდება...',
   publishBtn: 'გამოქვეყნება',
+  photosLabel: 'ფოტოები',
+  uploadPhoto: 'ატვირთვა',
+  primaryBadge: 'მთავარი',
+  swapTypeLabel: '⇄ გაცვლა',
+  giftTypeLabel: '◈ საჩუქარი',
+  wantsExchangeLabel: 'რა გინდა სანაცვლოდ?',
+  wantsExchangePlaceholder: 'მაგ: iPad, ტაბლეტი...',
+  titlePlaceholder: 'მაგ: MacBook Air M1',
+  descriptionPlaceholder: 'დეტალური აღწერა...',
+  titleRequired: 'სახელი სავალდებულოა',
+  minOnePhoto: 'მინიმუმ 1 ფოტო',
+  itemAdded: 'განცხადება დამატებულია!',
+  itemUpdated: 'განცხადება განახლდა!',
+  itemDeleted: 'წაიშალა',
+  deleteError: 'წაშლის შეცდომა',
+  deleteConfirmTitle: '"{{title}}" — წაიშალოს?',
+  searchListings: 'განცხადების ძებნა...',
+  clearSearch: 'გასუფთავება',
+  manageListings: 'განცხადებების მართვა, რედაქტირება და წაშლა',
+  totalStat: 'სულ',
+  noSearchResultsFor: '"{{query}}"-ს შესაბამისი განცხადება ვერ მოიძებნა',
+
+  // Auth toasts
+  welcomeToast: 'მოგესალმებით!',
+  registerSuccess: 'რეგისტრაცია წარმატებულია!',
 
   // Favorites
   favoritesTitle: 'ფავორიტები',
   noFavorites: 'ფავორიტი განცხადება არ გაქვს',
+  tapToFavorite: 'დააჭირე ♡ განცხადებაზე, რომ ფავორიტებში დაამატო',
+  browsListings: 'განცხადებების დათვალიერება',
+  searchFavorites: 'ძებნა ფავორიტებში...',
+  savedAt: 'შენახულია',
+  savedListingsCount: '{{n}} შენახული განცხადება',
+  removedFromFavoritesToast: 'ფავორიტებიდან წაიშალა',
+  loadError: 'ჩატვირთვის შეცდომა',
+  notFoundQuery: 'ვერ მოიძებნა "{{query}}"',
+
+  // Profile stats
+  listingsStat: 'განცხადება',
+  totalSwapsStat: 'გაცვლა',
+  totalGiftsStat: 'საჩუქარი',
+
+  // Offers page toasts
+  offerAcceptedToast: 'შეთავაზება მიღებულია! ჩატი გაიხსნა.',
+  offerRejectedToast: 'შეთავაზება უარყოფილია',
+
+  // Item detail toasts
+  itemDeleteSuccess: 'განცხადება წაიშალა',
+  savedToFavorites: 'ფავორიტებში დაემატა',
+  removedFromFavorites: 'ფავორიტებიდან წაიშალა',
+  reviewAdded: 'შეფასება დაემატა!',
+  reviewError: 'შეფასების შეცდომა',
+  alreadySentOffer: 'უკვე გაგზავნილი გაქვს შეთავაზება',
+  sendError: 'გაგზავნა ვერ მოხერხდა',
+  pleaseEnterOfferDesc: 'გთხოვთ შეიყვანოთ შეთავაზების აღწერა',
+  tryAgain: 'გთხოვთ სცადოთ თავიდან',
 
   // Common
   loading: 'იტვირთება...',

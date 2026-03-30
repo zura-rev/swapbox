@@ -32,10 +32,10 @@ export default function OffersPage() {
     try {
       const { data } = await api.post(`/offers/${id}/accept`);
       setReceived(prev => prev.filter(o => o.id !== id));
-      toast.success('შეთავაზება მიღებულია! ჩატი გაიხსნა.');
+      toast.success(t('offerAcceptedToast'));
       nav(`/chat?open=${data.conversationId}`);
     } catch (err: any) {
-      toast.error(err?.response?.data?.error || 'შეცდომა');
+      toast.error(err?.response?.data?.error || t('error'));
     } finally {
       setActing(null);
     }
@@ -46,9 +46,9 @@ export default function OffersPage() {
     try {
       await api.post(`/offers/${id}/reject`);
       setReceived(prev => prev.filter(o => o.id !== id));
-      toast.success('შეთავაზება უარყოფილია');
+      toast.success(t('offerRejectedToast'));
     } catch (err: any) {
-      toast.error(err?.response?.data?.error || 'შეცდომა');
+      toast.error(err?.response?.data?.error || t('error'));
     } finally {
       setActing(null);
     }

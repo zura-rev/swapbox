@@ -20,14 +20,14 @@ export default function AuthPage() {
     try {
       if (tab === 'login') {
         await login(email, password);
-        toast.success('მოგესალმებით!');
+        toast.success(t('welcomeToast'));
       } else {
         await register({ email, password, displayName });
-        toast.success('რეგისტრაცია წარმატებულია!');
+        toast.success(t('registerSuccess'));
       }
       nav('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'შეცდომა');
+      toast.error(err.response?.data?.error || t('error'));
     } finally {
       setLoading(false);
     }
