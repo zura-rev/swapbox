@@ -45,7 +45,15 @@ const io = new Server(server, {
 setupSocket(io, prisma, chatRepo, notificationRepo);
 wireSocketService(io);
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+    },
+  },
+}));
 app.use(cors(isProd ? { origin: false } : {
   origin: allowedOrigin,
   credentials: true,
@@ -114,7 +122,8 @@ server.listen(PORT, async () => {
 
   try {
     const count = await prisma.item.count();
-    if (count === 0) {
+    const hasOldImages = count > 0 && await prisma.itemImage.findFirst({ where: { url: { contains: 'picsum.photos' } } });
+    if (count === 0 || hasOldImages) {
       console.log('Seeding...');
       execSync('npx tsx prisma/seed.ts', { cwd: serverDir, stdio: 'inherit' });
       console.log('Seeding done.');
