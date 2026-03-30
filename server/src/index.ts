@@ -29,6 +29,7 @@ import { globalLimiter, authLimiter } from './presentation/middleware/rateLimite
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 const server = createServer(app);
 
 const isProd = process.env.NODE_ENV === 'production';
