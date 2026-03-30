@@ -238,18 +238,73 @@ const ITEMS_BY_CATEGORY: Record<string, { titles: string[]; descs: string[]; wan
 };
 
 
+// ─── CATEGORY IMAGES (Unsplash) ──────────────────────────────────────────────
+
+const CATEGORY_IMAGES: Record<string, string[]> = {
+  electronics: [
+    'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&h=600&fit=crop',
+  ],
+  clothing: [
+    'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=600&fit=crop',
+  ],
+  books: [
+    'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=600&fit=crop',
+  ],
+  furniture: [
+    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1493663284031-b7e3aaa4e82a?w=800&h=600&fit=crop',
+  ],
+  sports: [
+    'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop',
+  ],
+  gaming: [
+    'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=600&fit=crop',
+  ],
+  kids: [
+    'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800&h=600&fit=crop',
+  ],
+  other: [
+    'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&h=600&fit=crop',
+  ],
+  cars: [
+    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=800&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&h=600&fit=crop',
+  ],
+};
+
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function imageUrl(_slug: string, lock: number, w = 800, h = 600) {
-  return `https://picsum.photos/seed/${lock}/${w}/${h}`;
+function imageUrl(slug: string, index: number): string {
+  const imgs = CATEGORY_IMAGES[slug] ?? CATEGORY_IMAGES.other;
+  return imgs[index % imgs.length];
 }
 
 function avatarUrl(lock: number) {
-  return `https://picsum.photos/seed/avatar${lock}/200/200`;
+  return `https://images.unsplash.com/photo-${['1472099645785-5658abf4ff4e', '1494790108377-be9c29b29330', '1527980965255-d3b416303d12', '1438761681033-6461ffad8d80', '1500648767791-00dcc994a43e'][lock % 5]}?w=200&h=200&fit=crop&crop=face`;
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
