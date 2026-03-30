@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import path from 'path';
 import { execSync } from 'child_process';
+import { writeFileSync, unlinkSync, existsSync } from 'fs';
 import swaggerUi from 'swagger-ui-express';
 
 import authRoutes from './presentation/routes/auth.routes';
@@ -98,34 +99,34 @@ server.listen(PORT, async () => {
   console.log(`Swagger UI: http://localhost:${PORT}/api/docs`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 
-  // Run migrations after server starts (non-blocking for Railway port detection)
+  const serverDir = path.join(__dirname, '..');
+  const envFile = path.join(serverDir, '.env');
+  const dbUrl = process.env.DATABASE_URL;
+
+  // Write .env so Prisma CLI can find DATABASE_URL
+  if (dbUrl) writeFileSync(envFile, `DATABASE_URL="${dbUrl}"\n`);
+
   try {
     console.log('Running migrations...');
-    execSync('npx prisma migrate deploy', {
-      cwd: path.join(__dirname, '..'),
-      stdio: 'inherit',
-      env: { ...process.env },
-    });
+    execSync('npx prisma migrate deploy', { cwd: serverDir, stdio: 'inherit' });
     console.log('Migrations done.');
   } catch (e: any) {
     console.error('Migration error:', e.message);
   }
 
-  // Seed if DB is empty
   try {
     const count = await prisma.category.count();
     if (count === 0) {
       console.log('Seeding...');
-      execSync('npx tsx prisma/seed.ts', {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-        env: { ...process.env },
-      });
+      execSync('npx tsx prisma/seed.ts', { cwd: serverDir, stdio: 'inherit' });
       console.log('Seeding done.');
     }
   } catch (e: any) {
     console.error('Seed error:', e.message);
   }
+
+  // Clean up .env after use
+  if (dbUrl && existsSync(envFile)) unlinkSync(envFile);
 });
 
 export { io };
