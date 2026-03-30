@@ -53,9 +53,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(globalLimiter);
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
 // Swagger UI
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/api/docs.json', (_req, res) => res.json(swaggerSpec));

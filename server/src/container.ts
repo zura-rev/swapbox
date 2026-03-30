@@ -13,6 +13,7 @@ import { PrismaNotificationRepository } from './infrastructure/repositories/Pris
 import { NotificationService } from './infrastructure/services/notification.service';
 import { UploadService } from './infrastructure/services/upload.service';
 import { SocketService } from './infrastructure/services/socket.service';
+import { CloudinaryStorageProvider } from './infrastructure/storage/CloudinaryStorageProvider';
 import type { Server } from 'socket.io';
 
 // Auth Use Cases
@@ -86,7 +87,8 @@ const notificationRepo = new PrismaNotificationRepository(prisma);
 
 // ─── Infrastructure Services ───
 const notificationService = new NotificationService(notificationRepo);
-const uploadService = new UploadService(userRepo);
+const storageProvider = new CloudinaryStorageProvider();
+const uploadService = new UploadService(userRepo, storageProvider);
 
 // ─── Auth Use Cases ───
 const registerUseCase = new RegisterUseCase(userRepo);
