@@ -29,11 +29,6 @@ import { globalLimiter, authLimiter } from './presentation/middleware/rateLimite
 dotenv.config();
 
 // Validate required env vars on startup
-const cloudVars = ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
-cloudVars.forEach(k => {
-  const v = process.env[k];
-  console.log(`[startup] ${k}: ${v === undefined ? 'UNDEFINED' : v === '' ? 'EMPTY_STRING' : `SET (len=${v.length})`}`);
-});
 
 const app = express();
 app.set('trust proxy', 1);
