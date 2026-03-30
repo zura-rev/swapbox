@@ -23,4 +23,4 @@ RUN cd server && npx tsc
 ENV NODE_ENV=production
 EXPOSE 5000
 
-CMD ["sh", "-c", "cd server && npx prisma migrate deploy && node dist/index.js"]
+CMD ["sh", "-c", "echo 'DATABASE_URL='$DATABASE_URL && node server/dist/index.js"]
