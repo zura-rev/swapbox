@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { cn, timeAgo, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
+import { cn, timeAgo, CONDITION_MAP, typeLabel, categoryName } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -183,7 +183,7 @@ export default function MyItemsPage() {
                         'text-[9px] font-bold px-1.5 py-0.5 rounded-md text-white',
                         isGift ? 'bg-gift-500' : 'bg-brand-400'
                       )}>
-                        {TYPE_MAP[item.type]}
+                        {typeLabel(item.type)}
                       </span>
                       <span className="text-[10px] text-gray-400">{item.category ? categoryName(item.category) : ''}</span>
                     </div>
@@ -195,7 +195,7 @@ export default function MyItemsPage() {
                   <div className="flex items-center gap-3 mt-1">
                     <span className="inline-flex items-center gap-1 text-[10px] text-gray-500">
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />
-                      {cond.label}
+                      {t(cond.tKey)}
                     </span>
                     <span className="text-[10px] text-gray-400 flex items-center gap-1">
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>

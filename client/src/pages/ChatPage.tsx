@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { getSocket } from '@/hooks/useSocket';
 import { useNotifications } from '@/hooks/useNotifications';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, typeLabel, categoryName } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 const REACT_EMOJIS = ['❤️', '😂', '😮', '😢', '😡', '👍', '👎', '🔥', '🎉', '🙏'];
@@ -190,7 +190,7 @@ function ItemPanel({ item }: { item: any }) {
     <div className="hidden lg:flex w-[220px] shrink-0 flex-col bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
       <div className="relative aspect-[4/3] bg-gray-100 dark:bg-gray-700 cursor-zoom-in shrink-0 group" onClick={() => images.length && setLightbox(imgIdx)}>
         {images[imgIdx] ? <img src={images[imgIdx].url} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" /> : <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">📷</div>}
-        <span className={cn('absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white', isGift ? 'bg-gift-500' : 'bg-brand-400')}>{TYPE_MAP[item.type]}</span>
+        <span className={cn('absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white', isGift ? 'bg-gift-500' : 'bg-brand-400')}>{typeLabel(item.type)}</span>
         {images.length > 1 && <span className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-lg">{imgIdx + 1}/{images.length}</span>}
       </div>
       {images.length > 1 && (
@@ -205,7 +205,7 @@ function ItemPanel({ item }: { item: any }) {
       <div className="flex-1 overflow-y-auto px-2.5 py-2 space-y-2.5">
         <h3 className="text-sm font-bold leading-tight text-gray-900 dark:text-white line-clamp-2">{item.title}</h3>
         <div className="flex flex-wrap gap-1">
-          {cond && <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cond.color }} />{cond.label}</span>}
+          {cond && <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cond.color }} />{t(cond.tKey)}</span>}
           {item.category && <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{item.category.icon} {categoryName(item.category)}</span>}
           {item.city && <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">📍 {item.city}</span>}
         </div>

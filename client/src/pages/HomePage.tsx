@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import ItemCard from '@/components/items/ItemCard';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, categoryName } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, typeLabel, categoryName } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void 
           'text-[10px] font-bold px-2.5 py-1 rounded-full text-white shrink-0',
           isGift ? 'bg-gradient-to-r from-gift-500 to-gift-400' : 'bg-gradient-to-r from-brand-500 to-brand-400'
         )}>
-          {TYPE_MAP[item.type]}
+          {typeLabel(item.type)}
         </span>
       </div>
 
@@ -92,7 +92,7 @@ function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void 
 
         <div className="flex items-center gap-2 flex-wrap mb-2.5">
           <span className="inline-flex items-center gap-1 text-[11px] bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-gray-500">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />{cond.label}
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />{t(cond.tKey)}
           </span>
           {item.category?.nameKa && (
             <span className="text-[11px] bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-gray-500">{categoryName(item.category)}</span>

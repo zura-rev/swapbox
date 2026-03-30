@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, typeLabel } from '@/lib/utils';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +28,7 @@ export default function ItemCard({ item, onSaveToggle }: Props) {
       setSaved(data.saved);
       onSaveToggle?.();
     } catch {
-      toast.error('შესვლა საჭიროა');
+      toast.error(t('login'));
     }
   };
 
@@ -53,7 +53,7 @@ export default function ItemCard({ item, onSaveToggle }: Props) {
             'absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide text-white uppercase',
             isGift ? 'bg-gradient-to-r from-gift-500 to-gift-400' : 'bg-gradient-to-r from-brand-500 to-brand-400'
           )}>
-            {TYPE_MAP[item.type]}
+            {typeLabel(item.type)}
           </span>
           <button onClick={toggleSave} className={cn(
             'absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all backdrop-blur-sm',
@@ -78,7 +78,7 @@ export default function ItemCard({ item, onSaveToggle }: Props) {
           <div className="flex items-center justify-between mt-2.5">
             <span className="inline-flex items-center gap-1 text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-md">
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />
-              {cond.label}
+              {t(cond.tKey)}
             </span>
             <span className="text-[10px] text-amber-500">{'★'.repeat(Math.round(item.user?.rating || 5))} <span className="text-gray-400">{item.user?.rating}</span></span>
           </div>

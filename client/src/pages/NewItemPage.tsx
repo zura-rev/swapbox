@@ -159,7 +159,7 @@ export default function NewItemPage() {
                 'py-2.5 rounded-xl border text-xs font-medium transition-all flex items-center justify-center gap-1.5',
                 condition === key ? 'border-brand-400 bg-brand-400/10 text-brand-400' : 'border-gray-200 dark:border-gray-700 text-gray-500'
               )}>
-                <span className="w-2 h-2 rounded-full" style={{ background: val.color }} />{val.label}
+                <span className="w-2 h-2 rounded-full" style={{ background: val.color }} />{t(val.tKey)}
               </button>
             ))}
           </div>

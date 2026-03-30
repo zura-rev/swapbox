@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, cn, categoryName } from '@/lib/utils';
+import { timeAgo, getInitials, CONDITION_MAP, typeLabel, cn, categoryName } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -330,7 +330,7 @@ if (loading || !item) return (
                 <img src={images[activeImg].url} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
               )}
               <span className={cn('absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white', isGift ? 'bg-gradient-to-r from-gift-500 to-gift-400' : 'bg-gradient-to-r from-brand-500 to-brand-400')}>
-                {TYPE_MAP[item.type]}
+                {typeLabel(item.type)}
               </span>
               {images.length > 0 && (
                 <div className="absolute bottom-3 right-3 px-2 py-1 rounded-lg bg-black/50 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">

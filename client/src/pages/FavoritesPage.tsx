@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { cn, timeAgo, getInitials, CONDITION_MAP, typeLabel } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -39,7 +39,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
           <span className={cn(
             'absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white uppercase',
             isGift ? 'bg-gradient-to-r from-gift-500 to-gift-400' : 'bg-gradient-to-r from-brand-500 to-brand-400'
-          )}>{TYPE_MAP[item.type]}</span>
+          )}>{typeLabel(item.type)}</span>
 
           {/* Remove button */}
           <button
@@ -69,7 +69,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1 text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-md">
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: cond.color }} />
-              {cond.label}
+              {t(cond.tKey)}
             </span>
             <span className="text-[10px] text-gray-400">{item.city}</span>
           </div>
