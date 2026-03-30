@@ -444,7 +444,7 @@ export default function Layout() {
                     : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                 )}
               >
-                {lang.flag} {lang.label}
+                {lang.label}
               </button>
             ))}
           </div>

@@ -7,9 +7,9 @@ import ru from './ru';
 const LANG_KEY = 'swapbox_lang';
 
 export const LANGUAGES = [
-  { code: 'ka', label: 'ქარ', flag: '🇬🇪' },
-  { code: 'en', label: 'ENG', flag: '🇬🇧' },
-  { code: 'ru', label: 'РУС', flag: '🇷🇺' },
+  { code: 'ka', label: 'ქარ' },
+  { code: 'en', label: 'ENG' },
+  { code: 'ru', label: 'рус' },
 ];
 
 const savedLang = localStorage.getItem(LANG_KEY) || 'ka';
