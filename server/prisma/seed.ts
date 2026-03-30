@@ -317,18 +317,16 @@ async function main() {
   }
   console.log(`✅ ${createdUsers.length} users`);
 
-  // 3. Items — 5000 across original 8 categories + 1000 cars
+  // 3. Items — 1 per category (10 total for fast seeding)
   const mainSlugs = ['electronics', 'clothing', 'books', 'furniture', 'sports', 'gaming', 'kids', 'other'];
-  const perCategory = Math.ceil(5000 / mainSlugs.length); // 625 each
+  const perCategory = 1;
   let totalItems = 0;
   let seedOffset = 0;
 
   for (const slug of mainSlugs) {
     const catId = createdCats[slug];
     const tpl = ITEMS_BY_CATEGORY[slug];
-    const count = slug === mainSlugs[mainSlugs.length - 1]
-      ? 5000 - totalItems  // remainder to last category
-      : perCategory;
+    const count = perCategory;
 
     for (let i = 0; i < count; i++) {
       const type = pick(TYPES);
@@ -371,7 +369,7 @@ async function main() {
   const MILEAGES = ['45,000 კმ', '68,000 კმ', '92,000 კმ', '120,000 კმ', '55,000 კმ', '78,000 კმ', '30,000 კმ', '105,000 კმ'];
   const ENGINES = ['1.6 ბენზინი', '2.0 ბენზინი', '1.8 ჰიბრიდი', '2.0 დიზელი', '2.5 ბენზინი', '3.0 ბენზინი', '1.5 ტურბო'];
 
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 2; i++) {
     const year = pick(YEARS);
     const mileage = pick(MILEAGES);
     const engine = pick(ENGINES);

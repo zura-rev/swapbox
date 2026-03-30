@@ -40,6 +40,24 @@ try {
   console.error('Migration failed (continuing):', e);
 }
 
+// Seed database if empty
+(async () => {
+  try {
+    const count = await prisma.category.count();
+    if (count === 0) {
+      console.log('Seeding database...');
+      execSync('npx tsx prisma/seed.ts', {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+        env: { ...process.env },
+      });
+      console.log('Seeding complete.');
+    }
+  } catch (e) {
+    console.error('Seed failed (continuing):', e);
+  }
+})();
+
 const app = express();
 const server = createServer(app);
 
