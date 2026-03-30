@@ -330,6 +330,7 @@ export default function ChatPage() {
 
   const [convs, setConvs] = useState<any[]>([]);
   const [convSearch, setConvSearch] = useState('');
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [active, setActive] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [msg, setMsg] = useState('');
@@ -377,6 +378,7 @@ export default function ChatPage() {
 
   const openConv = useCallback(async (conv: any) => {
     setActive(conv);
+    setSelectedItemId(conv.item?.id ?? '__no_item__');
     setMessages([]);
     setReplyingTo(null);
     setEditingMsg(null);
@@ -696,65 +698,96 @@ export default function ChatPage() {
 
       <div className="flex gap-3 h-[74vh]">
 
-        {/* ── Conversation list ─────────────────────────────────────────── */}
-        <div className="hidden sm:flex w-[200px] shrink-0 flex-col bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="px-3 pt-2.5 pb-2 border-b border-gray-200 dark:border-gray-700 shrink-0 space-y-2">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">ჩატები {convs.length > 0 && `(${convs.length})`}</span>
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-700/70 border border-gray-200 dark:border-gray-600/50">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input value={convSearch} onChange={e => setConvSearch(e.target.value)} placeholder="ძებნა..." className="flex-1 bg-transparent text-[11px] outline-none placeholder:text-gray-400 min-w-0" />
-              {convSearch && <button onClick={() => setConvSearch('')} className="text-gray-400 hover:text-gray-600 text-sm leading-none">×</button>}
-            </div>
-          </div>
-          <div className="overflow-y-auto flex-1">
-            {(() => {
-              const filtered = convSearch.trim() ? convs.filter(c => c.otherUser?.displayName?.toLowerCase().includes(convSearch.toLowerCase()) || c.lastMessageText?.toLowerCase().includes(convSearch.toLowerCase())) : convs;
-              if (convs.length === 0) return <p className="p-5 text-center text-xs text-gray-400">ჩატები არ გაქვს</p>;
-              if (filtered.length === 0) return <p className="p-5 text-center text-xs text-gray-400">"{convSearch}" — ვერ მოიძებნა</p>;
-              return filtered.map(conv => {
-                const isActive = active?.id === conv.id;
-                return (
-                  <button key={conv.id} onClick={() => openConv(conv)} className={cn('w-full flex items-start gap-2 px-3 py-2.5 text-left transition-all border-b border-gray-100 dark:border-gray-700/40 relative', isActive ? 'bg-brand-400/10 dark:bg-brand-400/15' : 'hover:bg-gray-50 dark:hover:bg-gray-700/40')}>
-                    {isActive && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-brand-400" />}
-                    <div className="w-8 h-8 rounded-full bg-brand-400 flex items-center justify-center text-white text-xs font-bold shrink-0 overflow-hidden">
-                      {conv.otherUser?.avatarUrl ? <img src={conv.otherUser.avatarUrl} className="w-full h-full object-cover" /> : getInitials(conv.otherUser?.displayName || 'U')}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className={cn('text-xs truncate', isActive || conv.unreadCount > 0 ? 'font-bold text-gray-900 dark:text-white' : 'font-medium text-gray-600 dark:text-gray-300')}>{conv.otherUser?.displayName}</span>
-                        {conv.unreadCount > 0 ? (
-                          <span className="shrink-0 min-w-[18px] h-[18px] bg-brand-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold px-1">{conv.unreadCount > 9 ? '9+' : conv.unreadCount}</span>
-                        ) : (
-                          <span className="text-[10px] text-gray-400 shrink-0">{timeAgo(conv.lastMessageAt)}</span>
-                        )}
-                      </div>
-                      <div className={cn('text-[10px] truncate', conv.unreadCount > 0 ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-400')}>
-                        {contentPreview(conv.lastMessageText)}
-                      </div>
-                      {conv.item && (
-                        <div className="flex items-center gap-1 mt-1">
-                          {conv.item.images?.[0]?.url && <img src={conv.item.images[0].url} className="w-3.5 h-3.5 rounded object-cover shrink-0" />}
-                          <span className="text-[10px] text-brand-400 font-medium truncate">{conv.item.title}</span>
-                        </div>
-                      )}
-                      {conv.offer?.images?.length > 0 && (
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <span className="text-[9px] text-gray-400 shrink-0">📋</span>
-                          <div className="flex gap-0.5">
-                            {conv.offer.images.slice(0, 3).map((img: any, i: number) => (
-                              <img key={i} src={img.url} className="w-4 h-4 rounded object-cover shrink-0 border border-white dark:border-gray-700" />
-                            ))}
-                          </div>
-                          {conv.offer.message && <span className="text-[9px] text-gray-400 truncate">{conv.offer.message}</span>}
-                        </div>
-                      )}
-                    </div>
+        {/* ── Grouped sidebar ───────────────────────────────────────────── */}
+        {(() => {
+          // Group conversations by item
+          const groups: Record<string, { item: any; convs: any[]; unread: number; lastAt: string }> = {};
+          for (const conv of convs) {
+            const key = conv.item?.id ?? '__no_item__';
+            if (!groups[key]) groups[key] = { item: conv.item ?? null, convs: [], unread: 0, lastAt: conv.lastMessageAt ?? '' };
+            groups[key].convs.push(conv);
+            groups[key].unread += conv.unreadCount || 0;
+            if ((conv.lastMessageAt ?? '') > groups[key].lastAt) groups[key].lastAt = conv.lastMessageAt ?? '';
+          }
+          const groupList = Object.entries(groups).sort((a, b) => (b[1].lastAt > a[1].lastAt ? 1 : -1));
+          const activeGroup = selectedItemId ? groups[selectedItemId] : null;
+
+          return (
+            <div className="hidden sm:flex w-[220px] shrink-0 flex-col bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              {/* Header */}
+              <div className="px-3 pt-2.5 pb-2 border-b border-gray-200 dark:border-gray-700 shrink-0 flex items-center gap-2">
+                {selectedItemId && (
+                  <button onClick={() => setSelectedItemId(null)} className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shrink-0">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
                   </button>
-                );
-              });
-            })()}
-          </div>
-        </div>
+                )}
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wide truncate">
+                  {selectedItemId && activeGroup ? (activeGroup.item?.title ?? 'ჩატები') : `განცხადებები (${groupList.length})`}
+                </span>
+              </div>
+
+              <div className="overflow-y-auto flex-1">
+                {convs.length === 0 && <p className="p-5 text-center text-xs text-gray-400">ჩატები არ გაქვს</p>}
+
+                {/* Level 1: item groups */}
+                {!selectedItemId && groupList.map(([key, group]) => {
+                  const img = group.item?.images?.[0]?.url;
+                  const isSelected = selectedItemId === key;
+                  return (
+                    <button key={key} onClick={() => setSelectedItemId(key)}
+                      className={cn('w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-all border-b border-gray-100 dark:border-gray-700/40 relative', isSelected ? 'bg-brand-400/10 dark:bg-brand-400/15' : 'hover:bg-gray-50 dark:hover:bg-gray-700/40')}
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 shrink-0 overflow-hidden flex items-center justify-center text-lg">
+                        {img ? <img src={img} className="w-full h-full object-cover" /> : '📦'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-0.5">
+                          <span className={cn('text-xs truncate font-semibold', group.unread > 0 ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300')}>
+                            {group.item?.title ?? 'ჩატი'}
+                          </span>
+                          {group.unread > 0 && (
+                            <span className="shrink-0 min-w-[18px] h-[18px] bg-brand-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold px-1">{group.unread > 9 ? '9+' : group.unread}</span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-gray-400">{group.convs.length} ჩატი · {timeAgo(group.lastAt)}</div>
+                      </div>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  );
+                })}
+
+                {/* Level 2: conversations within selected item */}
+                {selectedItemId && activeGroup && activeGroup.convs.map((conv: any) => {
+                  const isActive = active?.id === conv.id;
+                  return (
+                    <button key={conv.id} onClick={() => openConv(conv)}
+                      className={cn('w-full flex items-start gap-2 px-3 py-2.5 text-left transition-all border-b border-gray-100 dark:border-gray-700/40 relative', isActive ? 'bg-brand-400/10 dark:bg-brand-400/15' : 'hover:bg-gray-50 dark:hover:bg-gray-700/40')}
+                    >
+                      {isActive && <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-brand-400" />}
+                      <div className="w-8 h-8 rounded-full bg-brand-400 flex items-center justify-center text-white text-xs font-bold shrink-0 overflow-hidden">
+                        {conv.otherUser?.avatarUrl ? <img src={conv.otherUser.avatarUrl} className="w-full h-full object-cover" /> : getInitials(conv.otherUser?.displayName || 'U')}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-0.5">
+                          <span className={cn('text-xs truncate', isActive || conv.unreadCount > 0 ? 'font-bold text-gray-900 dark:text-white' : 'font-medium text-gray-600 dark:text-gray-300')}>{conv.otherUser?.displayName}</span>
+                          {conv.unreadCount > 0 ? (
+                            <span className="shrink-0 min-w-[18px] h-[18px] bg-brand-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold px-1">{conv.unreadCount > 9 ? '9+' : conv.unreadCount}</span>
+                          ) : (
+                            <span className="text-[10px] text-gray-400 shrink-0">{timeAgo(conv.lastMessageAt)}</span>
+                          )}
+                        </div>
+                        <div className={cn('text-[10px] truncate', conv.unreadCount > 0 ? 'text-gray-700 dark:text-gray-200 font-medium' : 'text-gray-400')}>
+                          {contentPreview(conv.lastMessageText)}
+                        </div>
+                        {conv.status === 'closed' && <span className="text-[9px] text-gray-400">🔒 დახურული</span>}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* ── Chat window ───────────────────────────────────────────────── */}
         <div className="flex-1 min-w-0 bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden">
