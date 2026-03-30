@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --color-brand: 29 158 117; --color-gift: 107 92 231; --dark-bg: #1e1c2a; }
+.dark { --color-brand: 93 202 165; --color-gift: 155 143 255; }
+
+body { font-family: 'Plus Jakarta Sans', 'Noto Sans Georgian', sans-serif; }
+* { box-sizing: border-box; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb { background: #3a3750; }

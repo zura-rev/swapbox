@@ -1,0 +1,327 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───
+
+enum ItemType {
+  swap
+  gift
+}
+
+enum ItemCondition {
+  new
+  like_new
+  good
+  fair
+}
+
+enum ItemStatus {
+  active
+  reserved
+  completed
+  archived
+}
+
+enum OfferStatus {
+  pending
+  accepted
+  rejected
+  completed
+  cancelled
+}
+
+enum UserRole {
+  user
+  pro
+  business
+  admin
+}
+
+enum ConversationStatus {
+  active
+  closed
+}
+
+// ─── USER ───
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  username     String   @unique
+  displayName  String   @map("display_name")
+  avatarUrl    String?  @map("avatar_url")
+  bio          String   @default("")
+  phone        String?
+  city         String   @default("თბილისი")
+  role         UserRole @default(user)
+  rating       Float    @default(5.0)
+  totalReviews Int      @default(0) @map("total_reviews")
+  totalSwaps   Int      @default(0) @map("total_swaps")
+  totalGifts   Int      @default(0) @map("total_gifts")
+  isVerified   Boolean  @default(false) @map("is_verified")
+  isOnline     Boolean  @default(false) @map("is_online")
+  lastSeenAt   DateTime @default(now()) @map("last_seen_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  items              Item[]
+  savedItems         SavedItem[]
+  sentOffers         Offer[]        @relation("OfferFrom")
+  receivedOffers     Offer[]        @relation("OfferTo")
+  reviewsGiven       Review[]       @relation("ReviewBy")
+  reviewsReceived    Review[]       @relation("ReviewFor")
+  conversationsAs1   Conversation[] @relation("ConvUser1")
+  conversationsAs2   Conversation[] @relation("ConvUser2")
+  messagesSent       Message[]
+  messageReactions   MessageReaction[]
+  notifications      Notification[]
+  chatBlocksGiven    ChatBlock[] @relation("Blocker")
+  chatBlocksReceived ChatBlock[] @relation("Blocked")
+
+  @@map("users")
+}
+
+// ─── CATEGORY ───
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  nameKa    String   @map("name_ka")
+  nameEn    String   @map("name_en")
+  icon      String
+  sortOrder Int      @default(0) @map("sort_order")
+  itemCount Int      @default(0) @map("item_count")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  items Item[]
+
+  @@map("categories")
+}
+
+// ─── ITEM ───
+
+model Item {
+  id               String        @id @default(uuid())
+  userId           String        @map("user_id")
+  categoryId       Int           @map("category_id")
+  title            String
+  description      String
+  type             ItemType
+  condition        ItemCondition
+  status           ItemStatus    @default(active)
+  wantsDescription String?       @map("wants_description")
+  city             String        @default("თბილისი")
+  viewCount        Int           @default(0) @map("view_count")
+  saveCount        Int           @default(0) @map("save_count")
+  offerCount       Int           @default(0) @map("offer_count")
+  isPromoted       Boolean       @default(false) @map("is_promoted")
+  promotedUntil    DateTime?     @map("promoted_until")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category     @relation(fields: [categoryId], references: [id])
+  images      ItemImage[]
+  savedBy     SavedItem[]
+  offers      Offer[]
+  reviews     Review[]
+  conversations Conversation[]
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt(sort: Desc)])
+  @@map("items")
+}
+
+// ─── ITEM IMAGES ───
+
+model ItemImage {
+  id         String   @id @default(uuid())
+  itemId     String   @map("item_id")
+  url        String
+  filename   String
+  sortOrder  Int      @default(0) @map("sort_order")
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("item_images")
+}
+
+// ─── SAVED ITEMS ───
+
+model SavedItem {
+  userId    String   @map("user_id")
+  itemId    String   @map("item_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([userId, itemId])
+  @@map("saved_items")
+}
+
+// ─── OFFERS ───
+
+model Offer {
+  id          String      @id @default(uuid())
+  itemId      String      @map("item_id")
+  fromUserId  String      @map("from_user_id")
+  toUserId    String      @map("to_user_id")
+  message     String?
+  offerItemId String?     @map("offer_item_id")
+  status      OfferStatus @default(pending)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  item         Item          @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  fromUser     User          @relation("OfferFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser       User          @relation("OfferTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  reviews      Review[]
+  conversation Conversation? @relation("ConvOffer")
+  images       OfferImage[]
+
+  @@map("offers")
+}
+
+// ─── OFFER IMAGES ───
+
+model OfferImage {
+  id        String   @id @default(uuid())
+  offerId   String   @map("offer_id")
+  url       String
+  filename  String
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@map("offer_images")
+}
+
+// ─── REVIEWS ───
+
+model Review {
+  id         String   @id @default(uuid())
+  reviewerId String   @map("reviewer_id")
+  reviewedId String   @map("reviewed_id")
+  offerId    String?  @map("offer_id")
+  itemId     String?  @map("item_id")
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  reviewer User   @relation("ReviewBy", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewed User   @relation("ReviewFor", fields: [reviewedId], references: [id], onDelete: Cascade)
+  offer    Offer? @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  item     Item?  @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@unique([reviewerId, offerId])
+  @@map("reviews")
+}
+
+// ─── CONVERSATIONS ───
+
+model Conversation {
+  id              String   @id @default(uuid())
+  participant1Id  String   @map("participant_1_id")
+  participant2Id  String   @map("participant_2_id")
+  itemId          String?  @map("item_id")
+  lastMessageText String?  @map("last_message_text")
+  lastMessageAt   DateTime @default(now()) @map("last_message_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  participant1 User               @relation("ConvUser1", fields: [participant1Id], references: [id], onDelete: Cascade)
+  participant2 User               @relation("ConvUser2", fields: [participant2Id], references: [id], onDelete: Cascade)
+  item         Item?              @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  messages     Message[]
+  status       ConversationStatus @default(active)
+  offerId      String?            @unique @map("offer_id")
+  offer        Offer?             @relation("ConvOffer", fields: [offerId], references: [id], onDelete: SetNull)
+
+  @@unique([participant1Id, participant2Id, itemId])
+  @@map("conversations")
+}
+
+// ─── MESSAGES ───
+
+model Message {
+  id             String    @id @default(uuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  content        String
+  isRead         Boolean   @default(false) @map("is_read")
+  replyToId      String?   @map("reply_to_id")
+  isEdited       Boolean   @default(false) @map("is_edited")
+  deletedAt      DateTime? @map("deleted_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User              @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo      Message?          @relation("MessageReply", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]         @relation("MessageReply")
+  reactions    MessageReaction[]
+
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+// ─── MESSAGE REACTIONS ───
+
+model MessageReaction {
+  id        String   @id @default(uuid())
+  messageId String   @map("message_id")
+  userId    String   @map("user_id")
+  emoji     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@map("message_reactions")
+}
+
+// ─── CHAT BLOCKS ───
+
+model ChatBlock {
+  id        String   @id @default(uuid())
+  blockerId String   @map("blocker_id")
+  blockedId String   @map("blocked_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  blocker User @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@map("chat_blocks")
+}
+
+// ─── NOTIFICATIONS ───
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  type      String
+  title     String
+  body      String?
+  data      Json     @default("{}")
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt(sort: Desc)])
+  @@map("notifications")
+}
