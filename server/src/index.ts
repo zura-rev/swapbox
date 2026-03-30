@@ -28,6 +28,15 @@ import { globalLimiter, authLimiter } from './presentation/middleware/rateLimite
 
 dotenv.config();
 
+// Validate required env vars on startup
+const missingVars = ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET']
+  .filter(k => !process.env[k]);
+if (missingVars.length) {
+  console.error('[startup] Missing env vars:', missingVars.join(', '));
+} else {
+  console.log('[startup] Cloudinary env vars: OK');
+}
+
 const app = express();
 app.set('trust proxy', 1);
 const server = createServer(app);
