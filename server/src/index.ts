@@ -122,7 +122,9 @@ server.listen(PORT, async () => {
 
   try {
     const count = await prisma.item.count();
-    const hasOldImages = count > 0 && await prisma.itemImage.findFirst({ where: { url: { contains: 'picsum.photos' } } });
+    const hasOldImages = count > 0 && await prisma.itemImage.findFirst({
+      where: { OR: [{ url: { contains: 'picsum.photos' } }, { url: { contains: 'loremflickr.com' } }] },
+    });
     if (count === 0 || hasOldImages) {
       console.log('Seeding...');
       execSync('npx tsx prisma/seed.ts', { cwd: serverDir, stdio: 'inherit' });
