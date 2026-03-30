@@ -4,10 +4,12 @@ import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { timeAgo, getInitials } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function OffersPage() {
   const { user } = useAuth();
   const nav = useNavigate();
+  const { t } = useTranslation();
   const [received, setReceived] = useState<any[]>([]);
   const [sent, setSent] = useState<any[]>([]);
   const [tab, setTab] = useState<'received' | 'sent'>('received');
@@ -53,11 +55,11 @@ export default function OffersPage() {
   };
 
   const STATUS_LABELS: Record<string, string> = {
-    pending: 'განხილვაში',
-    accepted: 'მიღებული',
-    rejected: 'უარყოფილი',
-    cancelled: 'გაუქმებული',
-    completed: 'დასრულებული',
+    pending: t('statusPending'),
+    accepted: t('statusAccepted'),
+    rejected: t('statusRejected'),
+    cancelled: t('statusCancelled'),
+    completed: t('statusCompleted'),
   };
 
   const STATUS_COLORS: Record<string, string> = {
@@ -78,25 +80,25 @@ export default function OffersPage() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6">
-      <h1 className="text-xl font-bold mb-4">შეთავაზებები</h1>
+      <h1 className="text-xl font-bold mb-4">{t('offersTitle')}</h1>
 
       {/* Tabs */}
       <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl mb-5">
-        {(['received', 'sent'] as const).map(t => (
+        {(['received', 'sent'] as const).map(tabKey => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === t ? 'bg-white dark:bg-gray-700 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+            key={tabKey}
+            onClick={() => setTab(tabKey)}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${tab === tabKey ? 'bg-white dark:bg-gray-700 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
           >
-            {t === 'received'
-              ? `📥 მიღებული (${received.filter(o => o.status === 'pending').length})`
-              : `📤 გაგზავნილი (${sent.filter(o => o.status === 'pending').length})`}
+            {tabKey === 'received'
+              ? `📥 ${t('received')} (${received.filter(o => o.status === 'pending').length})`
+              : `📤 ${t('sent')} (${sent.filter(o => o.status === 'pending').length})`}
           </button>
         ))}
       </div>
 
       {list.length === 0 ? (
-        <p className="text-center text-gray-400 py-12">შეთავაზებები არ არის</p>
+        <p className="text-center text-gray-400 py-12">{t('noOffers')}</p>
       ) : (
         <div className="space-y-3">
           {list.map((offer: any) => (
@@ -136,7 +138,7 @@ export default function OffersPage() {
 
                   {offer.message && (
                     <div className="mt-2 p-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700">
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">სთავაზობს სანაცვლოდ</p>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-0.5">{t('offerProposes')}</p>
                       <p className="text-sm text-gray-700 dark:text-gray-300">{offer.message}</p>
                     </div>
                   )}
@@ -163,14 +165,14 @@ export default function OffersPage() {
                     disabled={acting === offer.id}
                     className="flex-1 py-2 rounded-xl bg-brand-400 hover:bg-brand-500 text-white text-sm font-semibold transition-colors disabled:opacity-60"
                   >
-                    {acting === offer.id ? '...' : '✓ მიღება'}
+                    {acting === offer.id ? '...' : t('accept')}
                   </button>
                   <button
                     onClick={() => reject(offer.id)}
                     disabled={acting === offer.id}
                     className="flex-1 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold transition-colors disabled:opacity-60"
                   >
-                    ✕ უარყოფა
+                    {t('reject')}
                   </button>
                 </div>
               )}

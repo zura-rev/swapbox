@@ -5,6 +5,8 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { getInitials, timeAgo, cn } from '@/lib/utils';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { LANGUAGES } from '@/i18n/config';
 
 // ── Recent searches helpers ────────────────────────────────────────────────────
 const RECENT_KEY = 'swapbox_recent_searches';
@@ -30,6 +32,7 @@ const NOTIF_CONFIG: Record<string, { icon: string; color: string }> = {
 
 function NotificationPanel({ onClose }: { onClose: () => void }) {
   const { notifications, unreadCount, markAllRead, markOneRead } = useNotifications();
+  const { t } = useTranslation();
   const nav = useNavigate();
 
   // popup shows only unread offer notifications
@@ -56,14 +59,14 @@ function NotificationPanel({ onClose }: { onClose: () => void }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold">შეტყობინებები</span>
+          <span className="text-sm font-bold">{t('notifications')}</span>
           {unreadCount > 0 && (
             <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full">{unreadCount}</span>
           )}
         </div>
         {unread.length > 0 && (
           <button onClick={handleMarkAll} className="text-xs text-brand-400 hover:text-brand-500 font-medium transition-colors">
-            ყველა წაკითხული
+            {t('markAllRead')}
           </button>
         )}
       </div>
@@ -73,7 +76,7 @@ function NotificationPanel({ onClose }: { onClose: () => void }) {
         {unread.length === 0 ? (
           <div className="py-10 text-center">
             <div className="text-3xl mb-2">🔔</div>
-            <p className="text-sm text-gray-400">ახალი შეტყობინება არ არის</p>
+            <p className="text-sm text-gray-400">{t('noNotifications')}</p>
           </div>
         ) : (
           unread.map(notif => {
@@ -116,6 +119,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
   const [loading, setLoading] = useState(false);
   const [recent, setRecent] = useState<string[]>(() => getRecent());
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -145,7 +149,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
       {/* Recent searches (no query) */}
       {!query.trim() && recent.length > 0 && (
         <div className="py-1">
-          <p className="px-4 pt-2 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide">ბოლო ძებნა</p>
+          <p className="px-4 pt-2 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide">{t('recentSearches')}</p>
           {recent.map(term => (
             <div key={term} className="flex items-center gap-3 px-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
               <button
@@ -178,7 +182,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-2 opacity-40">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
-          <p className="text-sm">ნივთი, კატეგორია, მომხმარებელი...</p>
+          <p className="text-sm">{t('searchHint')}</p>
         </div>
       )}
 
@@ -195,7 +199,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
           {/* Items */}
           {results.length > 0 && (
             <>
-              <p className="px-4 pt-2 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide">განცხადებები</p>
+              <p className="px-4 pt-2 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide">{t('listings')}</p>
               {results.map((item: any) => (
                 <button key={item.id}
                   onMouseDown={e => { e.preventDefault(); onSelect(`/items/${item.id}`, query); }}
@@ -220,7 +224,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
           {/* Users */}
           {userResults.length > 0 && (
             <>
-              <p className={`px-4 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide ${results.length > 0 ? 'pt-3 border-t border-gray-100 dark:border-gray-700 mt-1' : 'pt-2'}`}>მომხმარებლები</p>
+              <p className={`px-4 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wide ${results.length > 0 ? 'pt-3 border-t border-gray-100 dark:border-gray-700 mt-1' : 'pt-2'}`}>{t('users')}</p>
               {userResults.map((u: any) => (
                 <button key={u.id}
                   onMouseDown={e => { e.preventDefault(); onSelect(`/profile/${u.id}`, query); }}
@@ -258,7 +262,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-brand-400">ყველა შედეგი "{query}"</p>
+              <p className="text-sm font-semibold text-brand-400">{t('allResults')} "{query}"</p>
             </button>
           </div>
         </div>
@@ -267,7 +271,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
       {/* No results */}
       {!loading && query.trim() && !hasResults && (
         <div className="py-8 text-center text-gray-400">
-          <p className="text-sm">"{query}" — ვერ მოიძებნა</p>
+          <p className="text-sm">"{query}" — {t('notFound')}</p>
         </div>
       )}
     </div>
@@ -278,6 +282,7 @@ function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {
 export default function Layout() {
   const { user, logout, loading } = useAuth();
   const { unreadCount, chatUnreadCount, clearChatUnread } = useNotifications();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -407,7 +412,7 @@ export default function Layout() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
-                placeholder="ძებნა..."
+                placeholder={t('search')}
                 className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-400 min-w-0"
               />
               {searchQuery ? (
@@ -424,6 +429,24 @@ export default function Layout() {
                 onClose={() => setSearchFocused(false)}
               />
             )}
+          </div>
+
+          {/* Language switcher */}
+          <div className="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-0.5">
+            {LANGUAGES.map(lang => (
+              <button
+                key={lang.code}
+                onClick={() => i18n.changeLanguage(lang.code)}
+                className={cn(
+                  'px-2 py-1 rounded-lg text-[11px] font-semibold transition-all',
+                  i18n.language === lang.code
+                    ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                )}
+              >
+                {lang.flag} {lang.label}
+              </button>
+            ))}
           </div>
 
           {/* Theme */}
@@ -487,7 +510,7 @@ export default function Layout() {
                 onClick={() => nav('/items/new')}
                 className="px-3 py-1.5 rounded-xl bg-brand-400 text-white text-xs font-semibold hover:bg-brand-500 transition-colors"
               >
-                <span className="hidden sm:inline">+ დამატება</span>
+                <span className="hidden sm:inline">{t('add')}</span>
                 <span className="sm:hidden">+</span>
               </button>
               <div className="relative">
@@ -502,11 +525,11 @@ export default function Layout() {
                       <p className="text-sm font-semibold">{user.displayName}</p>
                       <p className="text-xs text-gray-500">@{user.username}</p>
                     </div>
-                    <Link to="/profile" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">👤 ჩემი პროფილი</Link>
-                    <Link to="/my-items" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📝 ჩემი განცხადებები</Link>
-                    <Link to="/favorites" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">♥ ფავორიტები</Link>
-                    <Link to="/offers" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📋 შეთავაზებები</Link>
-                    <button onClick={() => { logout(); setMenuOpen(false); nav('/'); }} className="w-full text-left px-3 py-2.5 text-sm text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">გასვლა</button>
+                    <Link to="/profile" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">👤 {t('myProfile')}</Link>
+                    <Link to="/my-items" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📝 {t('myItems')}</Link>
+                    <Link to="/favorites" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">♥ {t('favorites')}</Link>
+                    <Link to="/offers" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">📋 {t('offers')}</Link>
+                    <button onClick={() => { logout(); setMenuOpen(false); nav('/'); }} className="w-full text-left px-3 py-2.5 text-sm text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">{t('logout')}</button>
                   </div>
                 </>
               )}
@@ -514,8 +537,8 @@ export default function Layout() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <button onClick={() => nav('/items/new')} className="px-3 py-1.5 rounded-xl bg-brand-400 text-white text-xs font-semibold hover:bg-brand-500 transition-colors">+ დამატება</button>
-              <Link to="/auth" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-400 transition-colors">შესვლა</Link>
+              <button onClick={() => nav('/items/new')} className="px-3 py-1.5 rounded-xl bg-brand-400 text-white text-xs font-semibold hover:bg-brand-500 transition-colors">{t('add')}</button>
+              <Link to="/auth" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-400 transition-colors">{t('login')}</Link>
             </div>
           ))}
         </div>
