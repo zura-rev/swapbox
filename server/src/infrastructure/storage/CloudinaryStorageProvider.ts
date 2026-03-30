@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import type { IStorageProvider, StorageUploadOptions, StorageUploadResult } from './IStorageProvider';
 
 export class CloudinaryStorageProvider implements IStorageProvider {
-  constructor() {
+  private configure() {
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
@@ -11,6 +11,7 @@ export class CloudinaryStorageProvider implements IStorageProvider {
   }
 
   async upload(buffer: Buffer, options: StorageUploadOptions): Promise<StorageUploadResult> {
+    this.configure();
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
@@ -29,6 +30,7 @@ export class CloudinaryStorageProvider implements IStorageProvider {
   }
 
   async delete(publicId: string): Promise<void> {
+    this.configure();
     await cloudinary.uploader.destroy(publicId);
   }
 }
