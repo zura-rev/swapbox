@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import { cn, CONDITION_MAP } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const CONDITIONS = Object.entries(CONDITION_MAP);
 
 export default function NewItemPage() {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState<'swap' | 'gift'>('swap');
@@ -78,7 +80,7 @@ export default function NewItemPage() {
 
   return (
     <main className="max-w-xl mx-auto px-4 py-8">
-      <h1 className="text-xl font-bold mb-6">ახალი განცხადება</h1>
+      <h1 className="text-xl font-bold mb-6">{t('newItemTitle')}</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Photos */}
         <div>
@@ -102,18 +104,18 @@ export default function NewItemPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-1.5">სახელი</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('titleField')}</label>
           <input placeholder="მაგ: MacBook Air M1" value={title} onChange={e => setTitle(e.target.value)} className={inputCls} required />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-1.5">აღწერა</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('descriptionField')}</label>
           <textarea placeholder="დეტალური აღწერა..." value={description} onChange={e => setDescription(e.target.value)} rows={4} className={cn(inputCls, 'resize-y')} required />
         </div>
 
         {/* Type */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">ტიპი</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('typeField')}</label>
           <div className="grid grid-cols-2 gap-2">
             {([{ v: 'swap', l: '⇄ გაცვლა', c: 'brand' }, { v: 'gift', l: '◈ საჩუქარი', c: 'gift' }] as const).map(t => (
               <button key={t.v} type="button" onClick={() => setType(t.v)} className={cn(
@@ -135,7 +137,7 @@ export default function NewItemPage() {
 
         {/* Category */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">კატეგორია</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('categoryField')}</label>
           <div className="grid grid-cols-4 gap-1.5">
             {categories.map(c => (
               <button key={c.id} type="button" onClick={() => setCategoryId(c.id)} className={cn(
@@ -150,7 +152,7 @@ export default function NewItemPage() {
 
         {/* Condition */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">მდგომარეობა</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('conditionField')}</label>
           <div className="grid grid-cols-4 gap-1.5">
             {CONDITIONS.map(([key, val]) => (
               <button key={key} type="button" onClick={() => setCondition(key)} className={cn(
@@ -164,7 +166,7 @@ export default function NewItemPage() {
         </div>
 
         <button type="submit" disabled={loading} className="w-full py-3 rounded-xl bg-brand-400 hover:bg-brand-500 text-white font-semibold transition-colors disabled:opacity-50">
-          {loading ? 'იტვირთება...' : '+ განცხადების დამატება'}
+          {loading ? t('loading') : t('publishBtn')}
         </button>
       </form>
     </main>

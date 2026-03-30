@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,14 +44,14 @@ export default function AuthPage() {
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-200 flex items-center justify-center text-white text-2xl font-extrabold mx-auto mb-4">⇄</div>
           </Link>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">SwapBox</h1>
-          <p className="text-sm text-gray-500 mt-1">გაცვალე, გააჩუქე, გაახარე</p>
+          <p className="text-sm text-gray-500 mt-1">{t('authSubtitle')}</p>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-6">
-          {(['login', 'register'] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tab === t ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-gray-100' : 'text-gray-500'}`}>
-              {t === 'login' ? 'შესვლა' : 'რეგისტრაცია'}
+          {(['login', 'register'] as const).map(tabKey => (
+            <button key={tabKey} onClick={() => setTab(tabKey)} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${tab === tabKey ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-gray-100' : 'text-gray-500'}`}>
+              {tabKey === 'login' ? t('tabLogin') : t('tabRegister')}
             </button>
           ))}
         </div>
@@ -58,20 +60,20 @@ export default function AuthPage() {
         <form onSubmit={handleSubmit} className="space-y-3">
           {tab === 'register' && (
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">სახელი</label>
-              <input placeholder="მაგ: ნიკა მეგრელიშვილი" value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} required />
+              <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('displayName')}</label>
+              <input placeholder={t('displayNamePlaceholder')} value={displayName} onChange={e => setDisplayName(e.target.value)} className={inputCls} required />
             </div>
           )}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5">ელ. ფოსტა</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('email')}</label>
             <input type="email" placeholder="email@example.com" value={email} onChange={e => setEmail(e.target.value)} className={inputCls} required />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5">პაროლი</label>
+            <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('password')}</label>
             <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} className={inputCls} required />
           </div>
           <button type="submit" disabled={loading} className="w-full py-3 rounded-xl bg-brand-400 hover:bg-brand-500 text-white font-semibold transition-colors disabled:opacity-50">
-            {loading ? '...' : tab === 'login' ? 'შესვლა' : 'რეგისტრაცია'}
+            {loading ? (tab === 'login' ? t('loggingIn') : t('registering')) : tab === 'login' ? t('loginBtn') : t('registerBtn')}
           </button>
         </form>
       </div>

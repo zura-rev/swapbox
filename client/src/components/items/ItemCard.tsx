@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   item: any;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function ItemCard({ item, onSaveToggle }: Props) {
+  const { t } = useTranslation();
   const [saved, setSaved] = useState(item.isSaved);
   const [hov, setHov] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -83,7 +85,7 @@ export default function ItemCard({ item, onSaveToggle }: Props) {
           <div className="mt-2.5 min-h-[32px]">
             {item.type === 'swap' && item.wantsDescription && (
               <div className="py-1.5 px-2.5 bg-brand-400/5 dark:bg-brand-400/10 border-l-2 border-brand-400 rounded-r-lg">
-                <span className="text-[10px] font-semibold text-brand-400">სანაცვლოდ: </span>
+                <span className="text-[10px] font-semibold text-brand-400">{t('wantsLabel')}: </span>
                 <span className="text-[11px] text-gray-500 dark:text-gray-400">{item.wantsDescription}</span>
               </div>
             )}

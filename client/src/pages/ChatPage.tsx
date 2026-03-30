@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { getSocket } from '@/hooks/useSocket';
 import { useNotifications } from '@/hooks/useNotifications';
 import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const REACT_EMOJIS = ['❤️', '😂', '😮', '😢', '😡', '👍', '👎', '🔥', '🎉', '🙏'];
 
@@ -108,6 +109,7 @@ function ContextMenu({ ctx, userId, onReply, onEdit, onDelete, onForward, onCopy
   onReply: () => void; onEdit: () => void; onDelete: () => void;
   onForward: () => void; onCopy: () => void; onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const mine = ctx.msg.senderId === userId;
   const isDeleted = !!ctx.msg.deletedAt;
@@ -133,11 +135,11 @@ function ContextMenu({ ctx, userId, onReply, onEdit, onDelete, onForward, onCopy
 
   return (
     <div ref={ref} style={style} className="w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl overflow-hidden p-1">
-      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>} label="Reply" onClick={onReply} />}
-      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>} label="კოპირება" onClick={onCopy} />}
-      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>} label="გადაგზავნა" onClick={onForward} />}
-      {mine && !isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>} label="შეცვლა" onClick={onEdit} />}
-      {mine && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>} label="წაშლა" onClick={onDelete} danger />}
+      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>} label={t('reply')} onClick={onReply} />}
+      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>} label={t('copy')} onClick={onCopy} />}
+      {!isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>} label={t('forward')} onClick={onForward} />}
+      {mine && !isDeleted && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>} label={t('edit')} onClick={onEdit} />}
+      {mine && <Item icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>} label={t('delete')} onClick={onDelete} danger />}
     </div>
   );
 }
@@ -146,13 +148,14 @@ function ContextMenu({ ctx, userId, onReply, onEdit, onDelete, onForward, onCopy
 function ForwardDialog({ convs, activeId, onForward, onClose }: {
   convs: any[]; activeId: string; onForward: (conv: any) => void; onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const filtered = convs.filter(c => c.id !== activeId && c.otherUser?.displayName?.toLowerCase().includes(search.toLowerCase()));
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="bg-white dark:bg-gray-800 rounded-2xl w-80 overflow-hidden shadow-2xl">
         <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-          <span className="font-bold text-sm">გადაგზავნა</span>
+          <span className="font-bold text-sm">{t('forwardTo')}</span>
           <button onClick={onClose} className="w-6 h-6 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-sm">✕</button>
         </div>
         <div className="px-3 py-2">
@@ -160,7 +163,7 @@ function ForwardDialog({ convs, activeId, onForward, onClose }: {
         </div>
         <div className="max-h-60 overflow-y-auto pb-2">
           {filtered.length === 0 ? (
-            <p className="text-center text-xs text-gray-400 py-6">სხვა ჩატი არ მოიძებნა</p>
+            <p className="text-center text-xs text-gray-400 py-6">{t('noOtherChats')}</p>
           ) : filtered.map(c => (
             <button key={c.id} onClick={() => onForward(c)} className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left">
               <div className="w-9 h-9 rounded-full bg-brand-400 flex items-center justify-center text-white text-xs font-bold shrink-0 overflow-hidden">
@@ -323,6 +326,7 @@ function OfferBanner({ offer, onLightbox }: { offer: any; onLightbox: (url: stri
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function ChatPage() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { clearChatUnread } = useNotifications();
   const nav = useNavigate();
@@ -668,10 +672,10 @@ export default function ChatPage() {
   }, []);
 
   const blockUser = async (targetId: string) => {
-    if (!confirm('დარწმუნებული ხართ, რომ გსურთ ამ მომხმარებლის დაბლოკვა?')) return;
+    if (!confirm(t('blockConfirm'))) return;
     try {
       await api.post(`/chat/block/${targetId}`);
-      toast.success('მომხმარებელი დაბლოკილია');
+      toast.success(t('blocked'));
       loadConversations();
     } catch { toast.error('შეცდომა'); }
   };
@@ -692,7 +696,7 @@ export default function ChatPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
       <h1 className="text-xl font-bold mb-5 flex items-center gap-2">
-        შეტყობინებები
+        {t('messagesTitle')}
         {totalUnread > 0 && <span className="text-xs bg-red-500 text-white rounded-full px-2 py-0.5 font-semibold">{totalUnread > 99 ? '99+' : totalUnread}</span>}
       </h1>
 
@@ -727,7 +731,7 @@ export default function ChatPage() {
               </div>
 
               <div className="overflow-y-auto flex-1">
-                {convs.length === 0 && <p className="p-5 text-center text-xs text-gray-400">ჩატები არ გაქვს</p>}
+                {convs.length === 0 && <p className="p-5 text-center text-xs text-gray-400">{t('noChats')}</p>}
 
                 {/* Level 1: item groups */}
                 {!selectedItemId && groupList.map(([key, group]) => {
@@ -831,7 +835,7 @@ export default function ChatPage() {
               {showMsgSearch && (
                 <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700/60 flex items-center gap-2 bg-brand-400/5">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                  <input ref={msgSearchRef} value={msgSearch} onChange={e => setMsgSearch(e.target.value)} placeholder="შეტყობინებაში ძებნა..." className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400" />
+                  <input ref={msgSearchRef} value={msgSearch} onChange={e => setMsgSearch(e.target.value)} placeholder={t('searchMessages')} className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400" />
                   {msgSearch && <span className="text-[10px] text-gray-400 shrink-0">{displayedMessages.length} შედეგი</span>}
                   <button onClick={() => { setMsgSearch(''); setShowMsgSearch(false); }} className="text-gray-400 hover:text-gray-600 text-sm">×</button>
                 </div>
@@ -885,7 +889,7 @@ export default function ChatPage() {
                           {m.deletedAt ? (
                             <div className={cn('max-w-[280px] px-3.5 py-2 rounded-2xl text-sm italic opacity-40 flex items-center gap-2', mine ? 'bg-brand-400 text-white rounded-br-sm' : 'bg-gray-100 dark:bg-gray-700 rounded-bl-sm')}>
                               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                              <span>შეტყობინება წაშლილია</span>
+                              <span>{t('deletedMessage')}</span>
                             </div>
                           ) : loc ? (
                             <div>
@@ -1012,7 +1016,7 @@ export default function ChatPage() {
 
                     <input
                       ref={inputRef}
-                      placeholder={editingMsg ? 'შეცვლილი ტექსტი...' : 'შეტყობინება...'}
+                      placeholder={editingMsg ? 'შეცვლილი ტექსტი...' : t('typeMessage')}
                       value={msg}
                       onChange={e => handleInputChange(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } if (e.key === 'Escape') { setReplyingTo(null); setEditingMsg(null); setMsg(''); } }}

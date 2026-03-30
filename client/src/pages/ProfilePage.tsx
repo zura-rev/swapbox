@@ -4,8 +4,10 @@ import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { getInitials, timeAgo } from '@/lib/utils';
 import ItemCard from '@/components/items/ItemCard';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user: me } = useAuth();
   const [profile, setProfile] = useState<any>(null);
@@ -57,10 +59,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Items */}
-      <h2 className="text-lg font-bold mb-4">განცხადებები</h2>
+      <h2 className="text-lg font-bold mb-4">{t('allListings')}</h2>
       {!profile.items?.length ? (
         <div className="text-center py-12 text-gray-400">
-          <p className="text-sm">განცხადებები არ არის</p>
+          <p className="text-sm">{t('noItems')}</p>
           {profileId === me?.id && <Link to="/items/new" className="text-sm text-brand-400 font-medium mt-2 inline-block">+ პირველი განცხადების დამატება</Link>}
         </div>
       ) : (
@@ -72,7 +74,7 @@ export default function ProfilePage() {
       {/* Reviews */}
       {profile.reviewsReceived?.length > 0 && (
         <>
-          <h2 className="text-lg font-bold mb-4">შეფასებები ({profile.reviewsReceived.length})</h2>
+          <h2 className="text-lg font-bold mb-4">{t('reviews')} ({profile.reviewsReceived.length})</h2>
           <div className="space-y-3">
             {profile.reviewsReceived.map((r: any) => (
               <div key={r.id} className="flex gap-3 p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700">

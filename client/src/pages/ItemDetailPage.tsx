@@ -4,6 +4,7 @@ import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { timeAgo, getInitials, CONDITION_MAP, TYPE_MAP, cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
 
@@ -127,6 +128,7 @@ function Lightbox({ images, startIndex, onClose }: {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ItemDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user } = useAuth();
   const nav = useNavigate();
@@ -442,8 +444,8 @@ if (loading || !item) return (
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
               <div>
-                <h3 className="text-base font-bold">შენი შეთავაზება</h3>
-                <p className="text-xs text-gray-400 mt-0.5">"{item.title}"-ის სანაცვლოდ</p>
+                <h3 className="text-base font-bold">{t('yourOffer')}</h3>
+                <p className="text-xs text-gray-400 mt-0.5">{t('offerFor')} "{item.title}"</p>
               </div>
               <button onClick={() => setOfferStep(null)} className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">✕</button>
             </div>
@@ -451,11 +453,11 @@ if (loading || !item) return (
             <div className="overflow-y-auto flex-1 p-5 space-y-4">
               {/* Description */}
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">რას სთავაზობ სანაცვლოდ? *</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">{t('offerWhat')}</label>
                 <textarea
                   value={offerDescription}
                   onChange={e => setOfferDescription(e.target.value)}
-                  placeholder="აღწერე შენი ნივთი — მოდელი, მდგომარეობა, სხვა დეტალები..."
+                  placeholder={t('offerPlaceholder')}
                   rows={3}
                   className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm resize-none outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
                   autoFocus
@@ -464,7 +466,7 @@ if (loading || !item) return (
 
               {/* Image upload */}
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">სურათები (სურვილისამებრ, მაქს. 4)</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">{t('offerImages')}</label>
                 <div className="grid grid-cols-4 gap-2">
                   {offerImages.map((img, i) => (
                     <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700">
@@ -498,14 +500,14 @@ if (loading || !item) return (
                 onClick={() => setOfferStep(null)}
                 className="flex-1 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                გაუქმება
+                {t('cancel')}
               </button>
               <button
                 onClick={() => { if (offerDescription.trim()) loadCaptcha(); else toast.error('გთხოვთ შეიყვანოთ შეთავაზების აღწერა'); }}
                 disabled={!offerDescription.trim() || uploadingImages}
                 className="flex-1 py-2.5 rounded-xl bg-brand-400 hover:bg-brand-500 text-white text-sm font-semibold transition-colors disabled:opacity-50"
               >
-                შემდეგი →
+                {t('next')}
               </button>
             </div>
           </div>
@@ -517,7 +519,7 @@ if (loading || !item) return (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 w-full max-w-sm shadow-xl">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-bold">მე რობოტი არ ვარ</h3>
+              <h3 className="text-base font-bold">{t('captchaTitle')}</h3>
               <button onClick={() => setOfferStep(item.type === 'swap' ? 'form' : null)} className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 text-xs hover:bg-gray-200 transition-colors">✕</button>
             </div>
             <p className="text-sm text-gray-500 mb-4">
@@ -545,7 +547,7 @@ if (loading || !item) return (
             </div>
 
             <p className="text-xs text-gray-400 text-center mb-3">
-              {captchaSelected.length === 0 ? 'არცერთი არ არის შერჩეული' : `${captchaSelected.length} შერჩეული`}
+              {captchaSelected.length === 0 ? t('noneSelected') : `${captchaSelected.length} ${t('selected')}`}
             </p>
 
             <div className="flex gap-2">
@@ -553,14 +555,14 @@ if (loading || !item) return (
                 onClick={() => setOfferStep(item.type === 'swap' ? 'form' : null)}
                 className="flex-1 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                {item.type === 'swap' ? '← უკან' : 'გაუქმება'}
+                {item.type === 'swap' ? t('back') : t('cancel')}
               </button>
               <button
                 onClick={() => sendOffer(captcha.id, JSON.stringify(captchaSelected.sort((a,b)=>a-b)))}
                 disabled={captchaSelected.length === 0}
                 className={`flex-1 py-2.5 rounded-xl text-white text-sm font-semibold transition-colors ${isGift ? 'bg-gift-500 hover:bg-gift-600' : 'bg-brand-400 hover:bg-brand-500'} disabled:opacity-50`}
               >
-                გაგზავნა
+                {t('send')}
               </button>
             </div>
           </div>
@@ -571,8 +573,8 @@ if (loading || !item) return (
       {user && !isOwner && (
         <div className="mt-8 flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-gray-800/80 border border-gray-100 dark:border-gray-700/50">
           <div className="flex-1">
-            <p className="text-sm font-semibold mb-0.5">შეაფასე მომხმარებელი</p>
-            <p className="text-xs text-gray-400">ანონიმური რეიტინგი</p>
+            <p className="text-sm font-semibold mb-0.5">{t('rateUser')}</p>
+            <p className="text-xs text-gray-400">{t('anonymousRating')}</p>
           </div>
           {hasReviewed ? (
             <div className="flex items-center gap-2 text-sm text-gray-400">

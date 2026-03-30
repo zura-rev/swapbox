@@ -4,6 +4,7 @@ import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
   const [removing, setRemoving] = useState(false);
@@ -81,6 +82,7 @@ function FavoriteCard({ item, onRemove }: { item: any; onRemove: () => void }) {
 }
 
 export default function FavoritesPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,10 +111,10 @@ export default function FavoritesPage() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <span className="w-9 h-9 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 text-lg">♥</span>
-            ჩემი ფავორიტები
+            {t('favoritesTitle')}
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            {loading ? 'იტვირთება...' : `${items.length} შენახული განცხადება`}
+            {loading ? t('loading') : `${items.length} შენახული განცხადება`}
           </p>
         </div>
       </div>
@@ -143,7 +145,7 @@ export default function FavoritesPage() {
       {!loading && items.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <div className="w-20 h-20 rounded-2xl bg-red-500/10 flex items-center justify-center text-4xl mb-4">♡</div>
-          <h2 className="text-lg font-semibold mb-2">ჯერ არაფერი გაქვს შენახული</h2>
+          <h2 className="text-lg font-semibold mb-2">{t('noFavorites')}</h2>
           <p className="text-sm text-gray-400 mb-6 max-w-xs">დააჭირე ♡ განცხადებაზე, რომ ფავორიტებში დაამატო</p>
           <Link to="/" className="px-5 py-2.5 rounded-xl bg-brand-400 text-white text-sm font-semibold hover:bg-brand-500 transition-colors">
             განცხადებების დათვალიერება

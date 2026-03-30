@@ -3,10 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { cn, CONDITION_MAP } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const CONDITIONS = Object.entries(CONDITION_MAP);
 
 export default function EditItemPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const nav = useNavigate();
 
@@ -110,7 +112,7 @@ export default function EditItemPage() {
     <main className="max-w-xl mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => nav(-1)} className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">‹</button>
-        <h1 className="text-xl font-bold">განცხადების რედაქტირება</h1>
+        <h1 className="text-xl font-bold">{t('editItemTitle')}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -142,18 +144,18 @@ export default function EditItemPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-1.5">სახელი</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('titleField')}</label>
           <input value={title} onChange={e => setTitle(e.target.value)} className={inputCls} required />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-1.5">აღწერა</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-1.5">{t('descriptionField')}</label>
           <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4} className={cn(inputCls, 'resize-y')} required />
         </div>
 
         {/* Type */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">ტიპი</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('typeField')}</label>
           <div className="grid grid-cols-2 gap-2">
             {([{ v: 'swap', l: '⇄ გაცვლა', c: 'brand' }, { v: 'gift', l: '◈ საჩუქარი', c: 'gift' }] as const).map(t => (
               <button key={t.v} type="button" onClick={() => setType(t.v)} className={cn(
@@ -175,7 +177,7 @@ export default function EditItemPage() {
 
         {/* Category */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">კატეგორია</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('categoryField')}</label>
           <div className="grid grid-cols-4 gap-1.5">
             {categories.map(c => (
               <button key={c.id} type="button" onClick={() => setCategoryId(c.id)} className={cn(
@@ -190,7 +192,7 @@ export default function EditItemPage() {
 
         {/* Condition */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 mb-2">მდგომარეობა</label>
+          <label className="block text-xs font-semibold text-gray-500 mb-2">{t('conditionField')}</label>
           <div className="grid grid-cols-4 gap-1.5">
             {CONDITIONS.map(([key, val]) => (
               <button key={key} type="button" onClick={() => setCondition(key)} className={cn(
@@ -204,7 +206,7 @@ export default function EditItemPage() {
         </div>
 
         <button type="submit" disabled={saving} className="w-full py-3 rounded-xl bg-brand-400 hover:bg-brand-500 text-white font-semibold transition-colors disabled:opacity-50">
-          {saving ? 'ინახება...' : '✓ შენახვა'}
+          {saving ? t('saving') : t('saveBtn')}
         </button>
       </form>
     </main>

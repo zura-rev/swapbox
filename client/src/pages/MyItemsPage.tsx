@@ -4,8 +4,10 @@ import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { cn, timeAgo, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function MyItemsPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const nav = useNavigate();
   const [items, setItems] = useState<any[]>([]);
@@ -63,7 +65,7 @@ export default function MyItemsPage() {
 
       {/* Header */}
       <div className="mb-7">
-        <h1 className="text-2xl font-bold mb-1">ჩემი განცხადებები</h1>
+        <h1 className="text-2xl font-bold mb-1">{t('myItemsTitle')}</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">განცხადებების მართვა, რედაქტირება და წაშლა</p>
       </div>
 
@@ -138,7 +140,7 @@ export default function MyItemsPage() {
               <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
             </svg>
           </div>
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">განცხადებები არ გაქვთ</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('noMyItems')}</p>
         </div>
 
       /* No search results */

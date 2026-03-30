@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
 import ItemCard from '@/components/items/ItemCard';
 import { cn, timeAgo, getInitials, CONDITION_MAP, TYPE_MAP } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const ICON_MAP: Record<string, { color: string; icon: React.ReactNode }> = {
@@ -19,9 +20,9 @@ const ICON_MAP: Record<string, { color: string; icon: React.ReactNode }> = {
 };
 
 const TYPES = [
-  { value: 'all', label: 'ყველა' },
-  { value: 'swap', label: '⇄ გაცვლა' },
-  { value: 'gift', label: '◈ საჩუქარი' },
+  { value: 'all', labelKey: 'filterAll' },
+  { value: 'swap', labelKey: 'filterSwap' },
+  { value: 'gift', labelKey: 'filterGift' },
 ];
 
 const ALL_CAT = { id: 'all', slug: 'all', nameKa: 'ყველა' };
@@ -29,6 +30,7 @@ const LIMIT = 20;
 
 // ─── Feed Card ────────────────────────────────────────────────────────────────
 function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void }) {
+  const { t } = useTranslation();
   const [saved, setSaved] = useState(item.isSaved);
   const primaryImg = item.images?.find((i: any) => i.isPrimary) || item.images?.[0];
   const cond = CONDITION_MAP[item.condition] || CONDITION_MAP.good;
@@ -124,7 +126,7 @@ function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void 
             )}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            {saved ? 'შენახული' : 'შენახვა'}
+            {saved ? t('addToFavorites') : t('save')}
           </button>
         </div>
       </div>
@@ -134,6 +136,7 @@ function FeedCard({ item, onSaveToggle }: { item: any; onSaveToggle: () => void 
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const nav = useNavigate();
   const [items, setItems] = useState<any[]>([]);
@@ -264,11 +267,11 @@ export default function HomePage() {
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex gap-1">
-          {TYPES.map(t => (
-            <button key={t.value} onClick={() => setType(t.value)} className={cn(
+          {TYPES.map(typeOpt => (
+            <button key={typeOpt.value} onClick={() => setType(typeOpt.value)} className={cn(
               'px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-              type === t.value ? 'bg-brand-400 text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
-            )}>{t.label}</button>
+              type === typeOpt.value ? 'bg-brand-400 text-white shadow-sm' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700'
+            )}>{t(typeOpt.labelKey)}</button>
           ))}
         </div>
 
@@ -310,7 +313,7 @@ export default function HomePage() {
       ) : items.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <div className="text-4xl mb-3 opacity-30">◇</div>
-          <p className="text-sm">ვერაფერი მოიძებნა</p>
+          <p className="text-sm">{t('noItems')}</p>
         </div>
       ) : view === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
