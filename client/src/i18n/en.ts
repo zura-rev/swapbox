@@ -212,6 +212,9 @@ export default {
   // Common
   loading: 'Loading...',
   error: 'Error',
+  serverError: 'Server error',
+  profileNotFound: 'Profile not found',
+  addFirstListing: '+ Add your first listing',
   save: 'Save',
   close: 'Close',
   confirm: 'Confirm',

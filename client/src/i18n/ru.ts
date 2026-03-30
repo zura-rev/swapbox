@@ -212,6 +212,9 @@ export default {
   // Common
   loading: 'Загрузка...',
   error: 'Ошибка',
+  serverError: 'Ошибка сервера',
+  profileNotFound: 'Профиль не найден',
+  addFirstListing: '+ Добавить первое объявление',
   save: 'Сохранить',
   close: 'Закрыть',
   confirm: 'Подтвердить',

@@ -21,7 +21,7 @@ export default function ProfilePage() {
   }, [profileId]);
 
   if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" /></div>;
-  if (!profile) return <div className="text-center py-20 text-gray-500">პროფილი ვერ მოიძებნა</div>;
+  if (!profile) return <div className="text-center py-20 text-gray-500">{t('profileNotFound')}</div>;
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
@@ -63,7 +63,7 @@ export default function ProfilePage() {
       {!profile.items?.length ? (
         <div className="text-center py-12 text-gray-400">
           <p className="text-sm">{t('noItems')}</p>
-          {profileId === me?.id && <Link to="/items/new" className="text-sm text-brand-400 font-medium mt-2 inline-block">+ პირველი განცხადების დამატება</Link>}
+          {profileId === me?.id && <Link to="/items/new" className="text-sm text-brand-400 font-medium mt-2 inline-block">{t('addFirstListing')}</Link>}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">

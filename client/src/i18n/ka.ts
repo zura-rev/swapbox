@@ -212,6 +212,9 @@ export default {
   // Common
   loading: 'იტვირთება...',
   error: 'შეცდომა',
+  serverError: 'სერვერის შეცდომა',
+  profileNotFound: 'პროფილი ვერ მოიძებნა',
+  addFirstListing: '+ პირველი განცხადების დამატება',
   save: 'შენახვა',
   close: 'დახურვა',
   confirm: 'დადასტურება',

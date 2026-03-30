@@ -261,8 +261,8 @@ export default function ItemDetailPage() {
       }
       setOfferImages(prev => [...prev, ...uploaded]);
     } catch (err: any) {
-      const msg = err?.response?.data?.error || err?.message || 'სერვერის შეცდომა';
-      toast.error(`სურათი: ${msg}`);
+      const msg = err?.response?.data?.error || err?.message || t('serverError');
+      toast.error(`${t('photoBtn')}: ${msg}`);
     } finally {
       setUploadingImages(false);
     }
@@ -381,7 +381,7 @@ if (loading || !item) return (
 
             {item.type === 'swap' && item.wantsDescription && (
               <div className="p-3.5 rounded-xl bg-brand-400/5 dark:bg-brand-400/10 border border-brand-400/20 mb-5">
-                <div className="text-[10px] font-bold text-brand-400 uppercase tracking-wide mb-1">სანაცვლოდ ეძებს</div>
+                <div className="text-[10px] font-bold text-brand-400 uppercase tracking-wide mb-1">{t('wantsLabel')}</div>
                 <div className="text-sm">{item.wantsDescription}</div>
               </div>
             )}
@@ -404,16 +404,16 @@ if (loading || !item) return (
                   {offerLoading ? (
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block" />
                   ) : offerSent ? (
-                    isGift ? '✓ მოთხოვნა გაიგზავნა' : '✓ შეთავაზება გაიგზავნა'
+                    isGift ? t('requestSent') : t('offerSent')
                   ) : (
-                    isGift ? '◈ მინდა ეს ნივთი' : '⇄ შევთავაზო გაცვლა'
+                    isGift ? t('wantThis') : t('offerSwap')
                   )}
                 </button>
                 {/* Save / Favourite button */}
                 <button
                   onClick={toggleSave}
                   disabled={savingItem}
-                  title={saved ? 'ფავორიტებიდან წაშლა' : 'ფავორიტებში დამატება'}
+                  title={saved ? t('removeFromFavorites') : t('addToFavorites')}
                   className={cn(
                     'w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all border',
                     saved
@@ -428,7 +428,7 @@ if (loading || !item) return (
               </div>
             ) : (
               <div className="flex gap-2">
-                <button onClick={() => nav(`/items/${id}/edit`)} className="flex-1 py-3 rounded-xl bg-gray-100 dark:bg-gray-800 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">✏️ რედაქტირება</button>
+                <button onClick={() => nav(`/items/${id}/edit`)} className="flex-1 py-3 rounded-xl bg-gray-100 dark:bg-gray-800 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">✏️ {t('editItem')}</button>
                 <button onClick={handleDelete} disabled={deleting} className="px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50">
                   {deleting ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block" /> : '🗑'}
                 </button>
@@ -484,7 +484,7 @@ if (loading || !item) return (
                       ) : (
                         <>
                           <span className="text-xl text-gray-400">+</span>
-                          <span className="text-[10px] text-gray-400 mt-0.5">სურათი</span>
+                          <span className="text-[10px] text-gray-400 mt-0.5">{t('photoBtn')}</span>
                         </>
                       )}
                       <input type="file" accept="image/*" multiple className="hidden" onChange={e => handleOfferImageUpload(e.target.files)} />
