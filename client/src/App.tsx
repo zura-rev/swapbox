@@ -40,8 +40,8 @@ function AppInner() {
         <Route path="/favorites" element={<PrivateRoute><FavoritesPage /></PrivateRoute>} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/offers" element={<OffersPage />} />
+        <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+        <Route path="/offers" element={<PrivateRoute><OffersPage /></PrivateRoute>} />
       </Route>
       <Route path="/auth" element={<AuthPage />} />
     </Routes>

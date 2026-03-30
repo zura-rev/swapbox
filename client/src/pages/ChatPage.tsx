@@ -344,8 +344,7 @@ export default function ChatPage() {
   useEffect(() => { clearChatUnread(); }, []);
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) { nav('/auth'); return; }
+    if (authLoading || !user) return;
     const openId = searchParams.get('open');
     api.get('/chat').then(({ data }) => {
       setConvs(data);
