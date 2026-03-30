@@ -6,6 +6,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import path from 'path';
+import { execSync } from 'child_process';
 import swaggerUi from 'swagger-ui-express';
 
 import authRoutes from './presentation/routes/auth.routes';
@@ -25,6 +26,19 @@ import { swaggerSpec } from './swagger/swagger';
 import { globalLimiter, authLimiter } from './presentation/middleware/rateLimiter.middleware';
 
 dotenv.config();
+
+// Run DB migrations on startup
+try {
+  console.log('Running database migrations...');
+  execSync('npx prisma migrate deploy', {
+    cwd: path.join(__dirname, '..'),
+    stdio: 'inherit',
+    env: { ...process.env },
+  });
+  console.log('Migrations complete.');
+} catch (e) {
+  console.error('Migration failed (continuing):', e);
+}
 
 const app = express();
 const server = createServer(app);
